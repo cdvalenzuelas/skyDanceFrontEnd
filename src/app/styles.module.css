@@ -1,0 +1,17 @@
+.gridContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 50%;
+  margin: auto;
+  padding-top: 5rem;
+  outline: 1px salmon solid;
+}
+
+@media only screen and (max-width: 768px) {}
+
+@media only screen and (max-width: 1024px) {}
+
+@media only screen and (max-width: 1280px) {}
+
+@media only screen and (min-width: 1281px) {}

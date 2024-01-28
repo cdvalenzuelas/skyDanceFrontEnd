@@ -1,0 +1,10 @@
+.day {
+  padding: 0.5rem;
+  background-color: #f1f5f9;
+  border-radius: 0.5rem;
+}
+
+.voidDay {
+  background-color: #f1f5f9;
+  outline: #f1f5f9 solid 1px;
+}

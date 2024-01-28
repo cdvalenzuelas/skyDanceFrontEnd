@@ -1,0 +1,46 @@
+.cardContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100vh;
+}
+
+/* Contenedor */
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-items: center;
+  flex-shrink: 2;
+}
+
+/* Card */
+.card {
+  padding: 3rem;
+}
+
+/* Imagen */
+.image {
+  position: relative;
+  max-width: 33%;
+  height: 100vh;
+}
+
+.image img {
+  height: 100%;
+  object-fit: cover;
+}
+
+.image::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to right, var(--blue1), var(--blue2));
+  opacity: 0.5;
+  width: 100%;
+}

@@ -1,0 +1,25 @@
+.modalContainer {
+  height: 80vh;
+  overflow: hidden;
+  width: auto;
+  margin: 0;
+}
+
+@media only screen and (max-width: 768px) {
+  .modalContainer {
+    height: 100vh !important;
+    width: 75% !important;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .modalContainer {}
+}
+
+@media only screen and (max-width: 1280px) {
+  .modalContainer {}
+}
+
+@media only screen and (min-width: 1281px) {
+  .modalContainer {}
+}
