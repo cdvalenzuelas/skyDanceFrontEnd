@@ -1,6 +1,6 @@
 import { type StateCreator, create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import type { MinimalUser } from '@state'
+import type { User } from '@state'
 
 // *****************************TYPES****************************//
 
@@ -8,7 +8,7 @@ export type DanceGender = 'salsa' | 'bachata' | 'reggaeton' | 'dancehall' | 'afr
 
 export type DanceMode = 'shining' | 'couple'
 
-export type DanceDifficulty = 'principiante' | 'basico' | 'intermedio'
+export type DanceDifficulty = 'principiantes' | 'basico' | 'intermedio'
 
 // Todas las clases de baile y horarios tienen estas propiedades
 interface BaseClass {
@@ -29,7 +29,7 @@ export interface ScheduleClassFromDB extends BaseClass {
 
 // El horario utiliza la aplicación
 export interface ScheduleClass extends Omit<ScheduleClassFromDB, 'teacher'> {
-  teacher: MinimalUser
+  teacher: User
 }
 
 // Las clases que vienen de la base de datos
@@ -43,8 +43,8 @@ export interface DanceClassFromDB extends BaseClass {
 
 // Las clases que usa la aplicación
 export interface DanceClass extends Omit<DanceClassFromDB, 'teacher' | 'users' | 'date'> {
-  teacher: MinimalUser
-  users: MinimalUser[]
+  teacher: User
+  users: User[]
   date: Date
 }
 

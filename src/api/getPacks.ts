@@ -8,12 +8,15 @@ const supabase = createClientComponentClient()
 
 export const getPacks = async (): Promise<Pack[]> => {
   try {
+    // Hacer la query
     const { data, error } = await supabase
       .from('packs')
       .select('*')
 
-    // SI HAY UN ERROR O VIENE VACÍO
-    if ((error !== null && error.code !== 'PGRST116') || data === null) {
+    // si no viene data o hay un error, lanzar error
+    if (data === null || data.length === 0) {
+      throw new Error()
+    } else if (error !== null) {
       throw new Error()
     }
 

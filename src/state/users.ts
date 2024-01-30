@@ -1,6 +1,6 @@
 import { type StateCreator, create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import type { UserStatus, UserRole } from '@state'
+import type { UserStatus, UserRole, User, Sale } from '@state'
 
 // **********************************TYPES************************************ //
 
@@ -10,28 +10,100 @@ export interface MinimalUser {
   status: UserStatus
   name: string
   role: UserRole
+  instagram_id: string
+  active_plan: string
 }
 
 export interface MinimalUsers {
-  users: MinimalUser[]
+  users: User[]
+}
+
+interface DateToUpdate {
+  user_id: string
+  id: string
+  start_date: Date
+  end_date: Date
 }
 
 interface Actions {
-  saveUsers: (users: MinimalUser[]) => void
-  getTeachers: () => MinimalUser[]
+  saveUsers: (users: User[]) => void
+  getTeachers: () => User[]
+  activateUser: (userId: string) => void
+  updateUsersDates: (usersDates: DateToUpdate[]) => void
+  udateUsersTakenClasses: (usersIds: string[]) => void
+  updateUserPack: (usersIds: string, sale: Sale) => void
 }
 
 // ************************************STATE******************************* //
 
 const UserStateApi: StateCreator<MinimalUsers & Actions> = (set, get) => ({
   users: [],
-  saveUsers: (users: MinimalUser[]) => {
+  saveUsers: (users: User[]) => {
     set({ users }, false)
   },
   getTeachers: () => {
     const teachers = get().users.filter(item => item.role === 'teacher')
 
     return teachers
+  },
+  activateUser: (userId) => {
+    const user = get().users.filter(user => user.id === userId)[0]
+    const usersFiltered = get().users.filter(user => user.id !== userId)
+
+    set({ users: [...usersFiltered, user] })
+  },
+  updateUsersDates(usersDates) {
+    const usersDatesIds = usersDates.map(item => item.user_id)
+    const internalUsers = get().users
+
+    const filteredUsers = internalUsers.filter(item => usersDatesIds.includes(item.id))
+    const noFilteredUsers = internalUsers.filter(item => !usersDatesIds.includes(item.id))
+
+    filteredUsers.forEach(item => {
+      const userDates = usersDates.filter(item2 => item.id === item2.user_id)[0]
+
+      if (item.active_plan !== null) {
+        item.active_plan.start_date = userDates.start_date
+        item.active_plan.end_date = userDates.end_date
+
+        if (item.active_plan.end_date < new Date()) {
+          item.active_plan.active = false
+        }
+      }
+    })
+
+    console.log([...filteredUsers, ...noFilteredUsers])
+
+    set({ users: [...filteredUsers, ...noFilteredUsers] })
+  },
+  udateUsersTakenClasses: (usersIds) => {
+    const internalUsers = get().users
+
+    const filteredUsers = internalUsers.filter(item => usersIds.includes(item.id))
+    const noFilteredUsers = internalUsers.filter(item => !usersIds.includes(item.id))
+
+    filteredUsers.forEach(item => {
+      if (item.active_plan !== null) {
+        item.active_plan.taken_classes = item.active_plan.taken_classes + 1
+
+        if (item.active_plan.classes !== -1 && item.active_plan.classes === item.active_plan.taken_classes) {
+          console.log('se venció')
+          item.active_plan.active = false
+        }
+      }
+    })
+
+    set({ users: [...filteredUsers, ...noFilteredUsers] })
+  },
+  updateUserPack: (userId, pack) => {
+    const internalUsers = get().users
+
+    const filteredUser = internalUsers.filter(item => item.id === userId)[0]
+    const noFilteredUsers = internalUsers.filter(item => item.id !== userId)
+
+    filteredUser.active_plan = pack
+
+    set({ users: [filteredUser, ...noFilteredUsers] })
   }
 })
 

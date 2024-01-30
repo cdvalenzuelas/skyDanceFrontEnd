@@ -8,12 +8,21 @@ interface Input {
   select: string
 }
 
-export const populate = async <T>({ table, select, ids }: Input) => {
+// Popular arrays de ids
+export const populate = async <T>({ table, select, ids }: Input): Promise<T> => {
   try {
-    const { data } = await supabase
+    // Hacer la query
+    const { data, error } = await supabase
       .from(table)
       .select(select)
       .in('id', ids)
+
+    // Si no viene data o hay error lanzar erro
+    if (data === null || data.length === 0) {
+      throw new Error()
+    } else if (error !== null) {
+      throw new Error()
+    }
 
     return data as T
   } catch (error) {

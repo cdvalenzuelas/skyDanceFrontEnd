@@ -1,5 +1,6 @@
 import { type StateCreator, create } from 'zustand'
 import { devtools } from 'zustand/middleware'
+import { type Sale } from '.'
 
 // **********************************TYPES************************************ //
 
@@ -7,23 +8,25 @@ export type UserStatus = 'active' | 'inactive'
 
 export type UserRole = 'user' | 'teacher' | 'admin' | 'superAdmin'
 
-export interface User {
-  id: string // user.id
-  authId: string
-  name: string // user.user_metadata.full_name
-  mail: string // user.email
-  phone: string // user.phone
-  status: UserStatus // vienen del server
-  activePackage: 'bronce' | 'plata' | 'bronce' | 'platino' | 'parejas' | 'grirlPower' | 'none' // vinen del server
+export interface UserFromDB {
+  id: string
+  auth_id: string
+  name: string
+  mail: string
+  phone: string
   role: UserRole// viene del server
-  dateStart: Date
-  dateEnd: Date
   image: string // user_metadata.avatar_url
+  instagram_id: string
+  active_plan: string | null
+}
+
+export interface User extends Omit<UserFromDB, 'active_plan'> {
+  active_plan: Omit<Sale, 'user_id' | 'discount' | 'discount_description' | 'payment_mode' | 'price' | 'toatalPrice'> | null
 }
 
 interface Actions {
-  logIn: (user: User) => void
-  logOut: () => void
+  setUser: (user: User) => void
+  removeUser: () => void
 }
 
 //  *********************************STATE****************************** //
@@ -31,21 +34,19 @@ interface Actions {
 const voidUser: User = {
   name: '',
   mail: '',
-  status: 'inactive',
-  activePackage: 'platino',
-  dateStart: new Date(),
-  dateEnd: new Date(),
   image: '',
   id: '',
-  authId: '',
+  auth_id: '',
   phone: '',
-  role: 'user'
+  role: 'user',
+  instagram_id: '',
+  active_plan: null
 }
 
 const UserStateApi: StateCreator<User & Actions> = (set, get) => ({
   ...voidUser,
-  logIn: (user: User) => { set({ ...user }) },
-  logOut: () => { set({ ...voidUser }, false) }
+  setUser: (user: User) => { set({ ...user }) },
+  removeUser: () => { set({ ...voidUser }, false) }
 })
 
 export const useUserState = create<User & Actions>()(

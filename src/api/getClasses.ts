@@ -2,19 +2,30 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 // Types and Componets
-import type { MinimalUser, DanceClass, DanceClassFromDB } from '@state'
-import { populate } from '@api'
+import type { DanceClass, DanceClassFromDB, User } from '@state'
+import { createDateFromString, populate } from '@api'
 
 const supabase = createClientComponentClient()
 
-export const getClasses = async (): Promise<DanceClass[]> => {
+export const getClasses = async (year: number, month: number): Promise<DanceClass[]> => {
+  const nextMonth = month === 11 ? 1 : month + 2
+  const nextYear = month === 11 ? year + 1 : year
+
   try {
+    // hace la query
     const { data, error } = await supabase
       .from('classes')
       .select('id, gender, mode, style, hour, teacher, users, date, difficulty')
+      .gte('date', `${year}-${month + 1}-01`) // Mayor o igual que el 1 de enero de 2024
+      .lt('date', `${nextYear}-${nextMonth}-01`)
 
-    // SI HAY UN ERROR O VIENE VACÍO
-    if ((error !== null && error.code !== 'PGRST116') || data === null) {
+    console.log(month, year)
+    console.log(data)
+
+    // Si no viene data o hay un error lanzar error
+    if (data === null || data.length === 0) {
+      throw new Error()
+    } else if (error !== null) {
       throw new Error()
     }
 
@@ -27,7 +38,7 @@ export const getClasses = async (): Promise<DanceClass[]> => {
     const idsSet = new Set([...teachersIds, ...usersIds])
     const ids = [...idsSet]
 
-    const users = await populate<MinimalUser[]>({ table: 'users', ids, select: 'id, name, image, role, status' })
+    const users = await populate<User[]>({ table: 'users', ids, select: '*' })
 
     const classes: DanceClass[] = classesFromDB.map(item => {
       // Poblar el profesor
@@ -38,14 +49,11 @@ export const getClasses = async (): Promise<DanceClass[]> => {
         return users.filter(item3 => item3.id === userId)[0]
       })
 
-      // Extraer la fecha
-      const [year, month, day] = item.date.split('-').map(item3 => parseInt(item3))
-
       return {
         ...item,
         teacher,
         users: internalUsers,
-        date: new Date(year, month - 1, day)
+        date: createDateFromString(item.date)
       }
     })
 

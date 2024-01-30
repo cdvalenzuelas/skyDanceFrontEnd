@@ -6,24 +6,26 @@ export type PaymentMode = 'chash' | 'nequi' | 'daviplata' | 'tranfer' | 'tranfiy
 
 export interface Sale {
   id?: string
-  userId: string
-  packId: string
-  saleDate: Date
-  startDate: Date
-  endDate: Date
+  user_id: string
+  pack_id: string
+  sale_date: Date
+  start_date: Date
+  end_date: Date
   classes: number
-  takenClasses: number
-  missingClasses: number
+  taken_classes: number
   active: boolean
   discount: number
-  discountDescription: string
-  paymentMode: PaymentMode
+  discount_description: string
+  payment_mode: PaymentMode
+  price: number
+  total_price: number
+  name: string
 }
 
-export interface SaleFromDb extends Omit<Sale, 'saleDate' | 'startDate' | 'endDate'> {
-  saleDate: Date
-  startDate: Date
-  endDate: Date
+export interface SaleFromDb extends Omit<Sale, 'sale_date' | 'start_date' | 'end_date'> {
+  sale_date: string
+  start_date: string
+  end_date: string
 }
 
 export interface SalesState {

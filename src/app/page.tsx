@@ -4,8 +4,8 @@
 import { Card, CardHeader, CardBody, CardFooter, Button } from '@nextui-org/react'
 
 // Componets | state | types
-import { Hero } from '@/ui/PageHome/Hero'
-import { Classes } from '@/ui/PageHome/Classes'
+import { Hero } from '@/ui/Pages/Home/Hero'
+import { Classes } from '@/ui/Pages/Home/Classes'
 import styles from './styles.module.css'
 
 export interface Props {

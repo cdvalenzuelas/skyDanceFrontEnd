@@ -2,20 +2,23 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 // Types and Componets
-import type { ScheduleClass, ScheduleClassFromDB, MinimalUser } from '@state'
+import type { ScheduleClass, ScheduleClassFromDB, User } from '@state'
 import { populate } from '@api'
 
 const supabase = createClientComponentClient()
 
 export const getSchedule = async (): Promise<ScheduleClass[]> => {
   try {
+    // Hacer la query
     const { data, error } = await supabase
       .from('schedule')
       .select('*')
       .order('hour', { ascending: true })
 
-    // SI HAY UN ERROR O VIENE VACÍO
-    if ((error !== null && error.code !== 'PGRST116') || data === null) {
+    // Si no viene data o hay unerror lazar error
+    if (data === null || data.length === 0) {
+      throw new Error()
+    } else if (error !== null) {
       throw new Error()
     }
 
@@ -24,7 +27,7 @@ export const getSchedule = async (): Promise<ScheduleClass[]> => {
     // Poblar el horario
     const teachersIds = scheduleFromDB.map(item => item.teacher)
 
-    const teachers = await populate<MinimalUser[]>({ table: 'users', ids: teachersIds, select: 'id, name, image, role, status' })
+    const teachers = await populate<User[]>({ table: 'users', ids: teachersIds, select: '*' })
 
     const schedule: ScheduleClass[] = scheduleFromDB.map(item => {
       const teacherId = item.teacher
