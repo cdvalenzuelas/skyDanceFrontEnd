@@ -9,7 +9,7 @@ interface Props {
 export const Portal: FC<Props> = ({ children }) => {
   const showPortal = usePortalState(state => state.showPortal)
 
-  return showPortal === true
+  return showPortal
     ? ReactDOM.createPortal(children, document.querySelector('#portal') as Element)
     : null
 }

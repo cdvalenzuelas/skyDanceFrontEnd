@@ -59,6 +59,8 @@ export const createClass = async (danceClass: DanceClass, datesToUpdate: DateToU
 
     const { data: data2, error: error2 } = await supabase.rpc('incrementclass', { tablename: 'sales', columnname: 'taken_classes', ids: salesId })
 
+    console.log(data2)
+
     // Si hay un error o no viene data generar un error
     if (error2 !== null) {
       console.log(error2)
@@ -77,6 +79,8 @@ export const createClass = async (danceClass: DanceClass, datesToUpdate: DateToU
       .catch(err => {
         console.log(err)
       })
+
+    console.log(resultados)
 
     // Tomar el id de la clase creada y agregarla ala estado
     return [{

@@ -15,6 +15,7 @@ export const Login = () => {
 
   const handleSignIn = async (e: MouseEvent) => {
     const user = logIn()
+    console.log(user)
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

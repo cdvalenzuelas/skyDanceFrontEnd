@@ -12,6 +12,7 @@ import logo from './google.png'
 export const LogIn = () => {
   const handleSignIn = async (e: MouseEvent) => {
     const user = logIn()
+    console.log(user)
   }
 
   return (
