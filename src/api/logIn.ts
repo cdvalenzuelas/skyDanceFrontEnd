@@ -7,9 +7,9 @@ const supabase = createClientComponentClient()
 export const logIn = async () => {
   const host: string = process.env.NODE_ENV === 'development'
     ? 'http://localhost:3000'
-    : window.location.hostname
+    : window.location.origin
 
-  console.log(host)
+  console.log('soy el host => ', host)
 
   try {
     await supabase.auth.signInWithOAuth({
