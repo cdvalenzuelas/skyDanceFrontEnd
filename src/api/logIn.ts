@@ -9,7 +9,9 @@ export const logIn = async () => {
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: process.env.NEXT_PUBLIC_API_URL + '/auth/callback'
+        redirectTo: process.env.NODE_ENV === 'production'
+          ? process.env.NEXT_PUBLIC_API_URL + '/auth/callback'
+          : 'http://localhost:3000/auth/callback'
       }
     })
   } catch (error) {
