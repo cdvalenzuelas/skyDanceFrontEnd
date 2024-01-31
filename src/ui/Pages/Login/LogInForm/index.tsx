@@ -34,9 +34,9 @@ export const LogIn = () => {
               onClick={handleSignIn}
               color='primary'
               variant='bordered'
-              size='sm'
+              size='md'
             >
-              <img src={logo.src} alt='imagen' width={'20px'} />
+              <img src={logo.src} alt='imagen' style={{ height: '1rem' }} />
               INGRESAR
             </Button>
           </CardBody>

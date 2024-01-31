@@ -22,6 +22,24 @@
   box-sizing: border-box;
 }
 
+@media only screen and (max-width: 576px) {
+  :root {
+    font-size: 8px;
+  }
+
+  h1 {
+    font-size: 14px;
+  }
+
+  h2 {
+    font-size: 12px;
+  }
+
+  h3 {
+    font-size: 10px;
+  }
+}
+
 @media only screen and (max-width: 768px) {
   :root {
     font-size: 10px;

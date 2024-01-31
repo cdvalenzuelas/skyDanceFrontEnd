@@ -15,7 +15,9 @@ export const Header = () => {
   return (
 
     <header className="flex flex-wrap items-center justify-between px-5 py-5">
-      <img src='/logo.png' alt="logo" width={50} height={50} className={styles.logo} />
+      <Link href="/" color='primary'>
+        <img src='/logo.png' alt="logo" width={50} height={50} className={styles.logo} />
+      </Link>
       <nav className="flex flex-wrap gap-3">
         {/* <Button href="/classes" as={Link2} radius='sm' color='secondary' size='sm' variant='solid'>Clases</Button>
         <Button href="/teachers" as={Link2} radius='sm' color='secondary' size='sm' variant='solid'>Profesores</Button>
