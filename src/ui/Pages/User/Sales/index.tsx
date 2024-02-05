@@ -4,7 +4,7 @@ import { Button } from '@nextui-org/react'
 
 // Components
 import { NewSaleModal } from './NewSaleModal.tsx'
-import { SalesTable } from './SalesTable'
+// import { SalesTable } from './SalesTable'
 
 export const Sales = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -16,8 +16,8 @@ export const Sales = () => {
   }
 
   return (<>
-    <SalesTable />
+    {/* <SalesTable /> */}
     <Button size='sm' color='success' onClick={handleOpen} name='open'>Nueva Venta</Button>
-    <NewSaleModal isOpen={isOpen} handleOpen={handleOpen} setIsOpen={setIsOpen} />
+    {isOpen && <NewSaleModal isOpen={true} handleOpen={handleOpen} setIsOpen={setIsOpen} />}
   </>)
 }

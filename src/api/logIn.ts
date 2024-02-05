@@ -9,8 +9,6 @@ export const logIn = async () => {
     ? 'http://localhost:3000'
     : window.location.origin
 
-  console.log('soy el host => ', host)
-
   try {
     await supabase.auth.signInWithOAuth({
       provider: 'google',

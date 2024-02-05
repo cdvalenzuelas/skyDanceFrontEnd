@@ -63,7 +63,6 @@ export const createClass = async (danceClass: DanceClass, datesToUpdate: DateToU
 
     // Si hay un error o no viene data generar un error
     if (error2 !== null) {
-      console.log(error2)
       throw new Error()
     }
 
@@ -76,8 +75,8 @@ export const createClass = async (danceClass: DanceClass, datesToUpdate: DateToU
 
     const resultados = await Promise
       .all(promesas)
-      .catch(err => {
-        console.log(err)
+      .catch(() => {
+        throw new Error()
       })
 
     console.log(resultados)

@@ -4,18 +4,20 @@ import { type FC } from 'react'
 
 // Componets
 import { type DanceClass } from '@state'
-import styles from '../../VoidClass/styles.module.css'
+import styles from '../../styles.module.css'
 
 interface Props {
   danceClass: DanceClass
-  day: number
+  dayOfMonth: number
   month: number
   year: number
   editable: boolean
 }
 
-export const Info: FC<Props> = ({ danceClass, day, month, year, editable }) => {
-  return (<Card className={`${editable && styles.info}`}>
+export const Info: FC<Props> = ({ danceClass, dayOfMonth, month, year, editable }) => {
+  console.log(danceClass)
+
+  return (<Card className={styles.info}>
     <CardHeader className="absolute z-10 top-1 flex flex-col items-start px-5">
       <User
         name={danceClass.teacher.name}
@@ -32,12 +34,12 @@ export const Info: FC<Props> = ({ danceClass, day, month, year, editable }) => {
       />
 
       <div className='flex-grow flex flex-col gap-2'>
-        <Chip size='sm' color='secondary'>{`${day}/${month + 1}/${year} ${danceClass.hour}:00 a ${danceClass.hour + 1}:00`}</Chip>
+        <Chip size='sm' color='secondary'>{`${dayOfMonth}/${month + 1}/${year} ${danceClass.hour}:00 a ${danceClass.hour + 1}:00`}</Chip>
         <div className='flex justify-start gap-2'>
           <Chip size='sm' color='danger'>{danceClass.gender}</Chip>
           <Chip size='sm' color='warning'>{danceClass.difficulty}</Chip>
           <Chip size='sm' color='success'>{danceClass.mode}</Chip>
-          {danceClass.style !== '' && <Chip color='primary'>{danceClass.style}</Chip>}
+          {danceClass.style !== '' && <Chip size='sm' color='primary'>{danceClass.style}</Chip>}
         </div>
       </div>
 

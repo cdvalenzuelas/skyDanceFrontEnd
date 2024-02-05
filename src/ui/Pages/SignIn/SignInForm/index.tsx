@@ -49,6 +49,7 @@ export const Login = () => {
               label="Perfil de Instagram"
               placeholder="Indica tu perfil de Instagram"
               name='instagramId'
+              autoComplete='off'
               onChange={handleChange}
             />
 
@@ -57,6 +58,7 @@ export const Login = () => {
               label="Celular"
               placeholder="Indica tu Numero de Celular"
               name='phone'
+              autoComplete='off'
               onChange={handleChange}
             />
 

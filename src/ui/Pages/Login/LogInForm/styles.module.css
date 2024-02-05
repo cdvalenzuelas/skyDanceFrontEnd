@@ -44,3 +44,38 @@
   opacity: 0.5;
   width: 100%;
 }
+
+@media only screen and (max-width: 768px) and (orientation: portrait) {
+
+  .cardContainer {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .image {
+    position: relative;
+    max-width: 100%;
+    z-index: 1;
+    width: 900px;
+  }
+
+  .image img {
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .container {
+    position: absolute;
+    padding: 1rem;
+    z-index: 2;
+  }
+
+
+
+
+}

@@ -1,9 +1,11 @@
 // Libs
-import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Select, SelectItem, Input, Divider } from '@nextui-org/react'
+import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Select, SelectItem, Input, Divider, Textarea } from '@nextui-org/react'
 import type { Dispatch, FC, MouseEvent, SetStateAction } from 'react'
 
 // Components
 import { useNewSaleModal } from './useNewSaleModal'
+import { SearchUser } from '@/ui/Global/SearchUser'
+import { paymentModes, duaration } from '../utils'
 
 interface Props {
   isOpen: boolean
@@ -12,9 +14,17 @@ interface Props {
 }
 
 export const NewSaleModal: FC<Props> = ({ isOpen, handleOpen, setIsOpen }) => {
-  const { handSelect, handleChange, handleSubmit, startDateMessage, state, packs, paymentModes, duaration, pack } = useNewSaleModal({ setIsOpen })
+  const {
+    handles: { handSelect, handleSubmit },
+    packs,
+    startDateMessage,
+    internalSale,
+    pack,
+    getUser,
+    promotion
+  } = useNewSaleModal({ setIsOpen })
 
-  return (<Modal placement='center' isOpen={isOpen} size='lg' backdrop='blur'>
+  return (<Modal placement='center' isOpen={isOpen} size='lg' backdrop='blur' className='px-5 py-3'>
     <ModalContent>
 
       <ModalHeader>
@@ -23,56 +33,88 @@ export const NewSaleModal: FC<Props> = ({ isOpen, handleOpen, setIsOpen }) => {
 
       <ModalBody>
 
-        {packs.length > 0 && <Select
-          isRequired
-          label='Plan'
-          items={packs}
-          placeholder='Seleccione el Plan'
-          size='sm'
-          defaultSelectedKeys={[packs[0].id]}
-        >
-          {packs.map(pack => <SelectItem key={pack.id} onClick={e => { handSelect(e, 'pack') }}>{pack.name}</SelectItem>)}
-        </Select>}
+        <SearchUser
+          getSelectedUser={getUser}
+        />
 
-        <Select
-          isRequired
-          label='Método de Pago'
-          items={paymentModes}
-          placeholder='Seleccione el Método de Pago'
-          size='sm'
-          defaultSelectedKeys={['chash']}
-        >
-          {paymentModes.map(item => <SelectItem key={item} onClick={e => { handSelect(e, 'paymentMode') }}>{item}</SelectItem>)}
-        </Select>
+        <div className='flex gap-5'>
+          {packs.length > 0 && <Select
+            isRequired
+            label='Plan'
+            items={packs}
+            placeholder='Seleccione el Plan'
+            size='sm'
+            defaultSelectedKeys={[packs[0].id]}
+            variant='bordered'
+            color='secondary'
+          >
+            {packs.map(pack => <SelectItem color='secondary' key={pack.id} onClick={e => { handSelect(e, 'pack') }}>{pack.name}</SelectItem>)}
+          </Select>}
 
-        <Input
+          <Select
+            isRequired
+            label='Método de Pago'
+            items={paymentModes}
+            placeholder='Seleccione el Método de Pago'
+            size='sm'
+            defaultSelectedKeys={['chash']}
+            variant='bordered'
+            color='secondary'
+          >
+            {paymentModes.map(item => <SelectItem color='secondary' key={item} onClick={e => { handSelect(e, 'paymentMode') }}>{item}</SelectItem>)}
+          </Select>
+        </div>
+
+        <Divider />
+
+        {promotion !== '' && <Textarea
           isReadOnly
-          isDisabled
-          value={duaration(pack.classes, pack.duration, pack.period)}
+          color='warning'
+          value={promotion}
           type="text"
-          label="Clases / Duración"
+          label="Promoción"
           size='sm'
-        />
+          variant='flat'
+        />}
 
-        <Input
-          name='discount'
-          value={String(state.discount)}
-          type="number"
-          label="Descuento"
-          placeholder='Indique el monto del descuento'
-          size='sm'
-          onChange={handleChange}
-        />
+        <div className='flex flex-col gap-2 mt-2 mb-2'>
 
-        <Input
-          name='discountDescription'
-          value={String(state.discount_description)}
-          type="text"
-          label="Descripción del descuento"
-          placeholder='Indique la descripción del descuento'
-          size='sm'
-          onChange={handleChange}
-        />
+          <Input
+            isReadOnly
+            color='success'
+            value={duaration(pack.classes, pack.duration, pack.period)}
+            type="text"
+            label="Clases / Duración"
+            size='sm'
+            variant='flat'
+            autoComplete='off'
+          />
+
+          <div className='flex gap-2'>
+
+            {promotion !== '' && <Input
+              isReadOnly
+              color='danger'
+              value={`$ ${internalSale.price}`}
+              autoComplete='off'
+              type="text"
+              label="Precio normal"
+              size='sm'
+            />}
+
+            <Input
+              autoComplete='off'
+              isReadOnly
+              color='success'
+              value={`$ ${internalSale.total_price}`}
+              type="text"
+              label="Total a Pagar"
+              size='sm'
+            />
+
+          </div>
+
+        </div>
 
         <Divider />
 
@@ -82,7 +124,7 @@ export const NewSaleModal: FC<Props> = ({ isOpen, handleOpen, setIsOpen }) => {
 
       <ModalFooter>
         <Button name='close' size='sm' color='danger' variant='ghost' onClick={handleOpen}>Cerrar</Button>
-        <Button size='sm' color='primary' onClick={handleSubmit}>Crear</Button>
+        <Button size='sm' color='primary' onClick={handleSubmit} isDisabled={internalSale.user_id === ''}>Crear</Button>
       </ModalFooter>
 
     </ModalContent>

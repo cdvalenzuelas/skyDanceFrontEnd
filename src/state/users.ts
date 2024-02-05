@@ -28,7 +28,6 @@ interface DateToUpdate {
 interface Actions {
   saveUsers: (users: User[]) => void
   getTeachers: () => User[]
-  activateUser: (userId: string) => void
   updateUsersDates: (usersDates: DateToUpdate[]) => void
   udateUsersTakenClasses: (usersIds: string[]) => void
   updateUserPack: (usersIds: string, sale: Sale) => void
@@ -45,12 +44,6 @@ const UserStateApi: StateCreator<MinimalUsers & Actions> = (set, get) => ({
     const teachers = get().users.filter(item => item.role === 'teacher')
 
     return teachers
-  },
-  activateUser: (userId) => {
-    const user = get().users.filter(user => user.id === userId)[0]
-    const usersFiltered = get().users.filter(user => user.id !== userId)
-
-    set({ users: [...usersFiltered, user] })
   },
   updateUsersDates(usersDates) {
     const usersDatesIds = usersDates.map(item => item.user_id)
@@ -72,8 +65,6 @@ const UserStateApi: StateCreator<MinimalUsers & Actions> = (set, get) => ({
       }
     })
 
-    console.log([...filteredUsers, ...noFilteredUsers])
-
     set({ users: [...filteredUsers, ...noFilteredUsers] })
   },
   udateUsersTakenClasses: (usersIds) => {
@@ -87,7 +78,6 @@ const UserStateApi: StateCreator<MinimalUsers & Actions> = (set, get) => ({
         item.active_plan.taken_classes = item.active_plan.taken_classes + 1
 
         if (item.active_plan.classes !== -1 && item.active_plan.classes === item.active_plan.taken_classes) {
-          console.log('se venció')
           item.active_plan.active = false
         }
       }

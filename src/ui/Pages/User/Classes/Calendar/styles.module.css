@@ -1,8 +1,12 @@
-.container {
+.calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: repeat(6, 1fr);
-  grid-gap: 0.2rem;
+  grid-template-rows: 2rem repeat(5, 1fr);
+  grid-gap: 0;
   padding: 0.2rem;
   padding-top: 0;
+  height: 100%;
 }
+
+/* Celulares */
+@media only screen and (max-width: 768px) and (orientation: portrait) {}

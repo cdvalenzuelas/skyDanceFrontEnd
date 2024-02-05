@@ -27,6 +27,7 @@ export interface User extends Omit<UserFromDB, 'active_plan'> {
 interface Actions {
   setUser: (user: User) => void
   removeUser: () => void
+  activateUser: (sale: Sale) => void
 }
 
 //  *********************************STATE****************************** //
@@ -45,8 +46,11 @@ const voidUser: User = {
 
 const UserStateApi: StateCreator<User & Actions> = (set, get) => ({
   ...voidUser,
-  setUser: (user: User) => { set({ ...user }) },
-  removeUser: () => { set({ ...voidUser }, false) }
+  setUser: (user) => { set({ ...user }) },
+  removeUser: () => { set({ ...voidUser }) },
+  activateUser: (sale) => {
+    set({ active_plan: sale })
+  }
 })
 
 export const useUserState = create<User & Actions>()(

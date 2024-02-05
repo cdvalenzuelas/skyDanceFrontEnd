@@ -18,7 +18,7 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <main className='h-screen w-screen bg-slate-100'>
+      <main className='h-screen bg-slate-100 w-full'>
 
         <div className={`${styles.gridContainer}`}>
 

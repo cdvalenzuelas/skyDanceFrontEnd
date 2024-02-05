@@ -4,31 +4,37 @@ import type { DanceClass } from '@state'
 
 // *****************************TYPES****************************//
 export interface AppClasses {
-  classes: DanceClass[]
+  classesStore: Record<string, DanceClass[]>
 }
 
 interface Actions {
-  saveClasses: (classes: DanceClass[]) => void
-  addClass: (newClaa: DanceClass) => void
+  saveClasses: (yearMonth: string, classes: DanceClass[]) => void
+  addClass: (yearMonth: string, newClass: DanceClass) => void
   hoursOfClassesByDay: Record<string, number[]>
-  setHoursOfClassesByDay: () => void
+  setHoursOfClassesByDay: (yearMonth: string) => void
 }
 
 // ***************************STATE*****************************//
 
 const UserStateApi: StateCreator<AppClasses & Actions> = (set, get) => ({
   hoursOfClassesByDay: {},
-  classes: [],
-  saveClasses: (classes) => {
-    set({ classes }, false)
+  classesStore: {},
+  saveClasses: (yearMonth, classes) => {
+    const classesStore = get().classesStore
+    classesStore[yearMonth] = classes
+
+    set({ classesStore })
   },
-  addClass: (newClass) => {
-    set({ classes: [...get().classes, newClass] })
+  addClass: (yearMonth, newClass) => {
+    const classesStore = get().classesStore
+    classesStore[yearMonth] = [...classesStore[yearMonth], newClass]
+
+    set({ classesStore })
   },
-  setHoursOfClassesByDay: () => {
+  setHoursOfClassesByDay: (yearMonth) => {
     let internalHoursOfClassesByDay: Record<string, number[]> = {}
 
-    get().classes.forEach(item => {
+    get().classesStore[yearMonth].forEach(item => {
       const day = String(item.date.getDate())
 
       let value: Record<string, number[]>

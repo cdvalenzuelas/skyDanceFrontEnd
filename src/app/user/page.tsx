@@ -3,7 +3,6 @@
 // Libs
 import { type MouseEvent, useEffect } from 'react'
 import { Button } from '@nextui-org/react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
 
 // Components | State | types
@@ -15,6 +14,12 @@ import { Info } from '@/ui/Pages/User/Info'
 import { PacksTable } from '@/ui/Pages/User/Packs/PacksTable'
 import { Sales } from '@/ui/Pages/User/Sales'
 import { getClasses, getPacks, getSchedule, getUsers } from '@/api'
+import { ProfileIcon } from './ProfileIcon'
+import { ScheduleIcon } from './ScheduleIcon'
+import { ClassIcon } from './ClassIcon'
+import { SalesIcon } from './SalesIcon'
+import { PacksIcon } from './PacksIcon'
+import style from './styles.module.css'
 
 export interface Props {
   title: string
@@ -31,7 +36,7 @@ export default function User() {
   const saveClasses = useClassesState(state => state.saveClasses)
   const savePacks = usePacksState(state => state.setPacks)
   const userRole = useUserState(state => state.role)
-  const supabase = createClientComponentClient()
+  const userId = useUserState(state => state.id)
   const router = useRouter()
   const getDate = useDateState(state => state.getDate)
 
@@ -47,11 +52,9 @@ export default function User() {
 
     // Traer los datos del servidor
     (async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-
-      if (session?.user !== undefined) {
+      if (userId !== '') {
         // Traer la fecha actual
-        const { month, year } = getDate(true)
+        const { month, year } = getDate()
 
         // Traer todos los datos de la base de datos a la vez
         const [schedule, classes, users, packs] = await Promise.all([
@@ -62,11 +65,11 @@ export default function User() {
         ])
 
         saveSchedule(schedule)
-        saveClasses(classes)
+        saveClasses(`${year}-${month}`, classes)
         saveUsers(users)
         savePacks(packs)
       } else {
-        router.push('/')
+        router.replace('/')
       }
     })()
 
@@ -81,17 +84,20 @@ export default function User() {
       <Header />
       <div className='flex-1 overflow-auto flex justify-start'>
 
-        <aside className='flex flex-col gap-5 px-5 py-5 items-center bg-primary w-1/5'>
-          <Button size='sm' color='secondary' variant={userStage === 'info' ? 'solid' : 'ghost'} onClick={handleClick} name='info'>Perflil</Button>
-          <Button size='sm' color='secondary' variant={userStage === 'classes' ? 'solid' : 'ghost'} onClick={handleClick} name='classes'>Clases</Button>
-          <Button size='sm' color='secondary' variant={userStage === 'schedule' ? 'solid' : 'ghost'} onClick={handleClick} name='schedule'>Horario</Button>
-          <Button size='sm' color='secondary' variant={userStage === 'packs' ? 'solid' : 'ghost'} onClick={handleClick} name='packs'>Packs</Button>
+        <aside className={`flex flex-col items-center bg-primary xl:w-1/12 lg:w-1/12 md:w-1/6 ${style.aside}`}>
+          <Button startContent={<ProfileIcon />} size='sm' radius='none' className='w-full' color='secondary' variant={userStage === 'info' ? 'solid' : 'flat'} onClick={handleClick} name='info'>Perflil</Button>
+          <Button startContent={<ClassIcon />} size='sm' radius='none' className='w-full' color='secondary' variant={userStage === 'classes' ? 'solid' : 'flat'} onClick={handleClick} name='classes'>Clases</Button>
+          <Button startContent={<ScheduleIcon />} size='sm' radius='none' className='w-full' color='secondary' variant={userStage === 'schedule' ? 'solid' : 'flat'} onClick={handleClick} name='schedule'>Horario</Button>
+          <Button startContent={<PacksIcon />} size='sm' radius='none' className='w-full' color='secondary' variant={userStage === 'packs' ? 'solid' : 'flat'} onClick={handleClick} name='packs'>Packs</Button>
 
           {(userRole === 'admin' || userRole === 'superAdmin') && <Button
             size='sm'
             color='secondary'
-            variant={userStage === 'sales' ? 'solid' : 'ghost'}
+            variant={userStage === 'sales' ? 'solid' : 'flat'}
             onClick={handleClick}
+            startContent={<SalesIcon />}
+            className='w-full'
+            radius='none'
             name='sales'>
             VENTAS
           </Button>}
@@ -101,7 +107,7 @@ export default function User() {
           <Button size='sm' color='secondary' variant={userStage === 'renew' ? 'solid' : 'ghost'} onClick={handleClick} name='renew'>Renovar</Button> */}
         </aside>
 
-        <main className='flex-1 overflow-auto flex flex-col gap-5 py-5 px-5 bg-slate-100'>
+        <main className='flex-1 overflow-auto bg-slate-100'>
 
           {userStage === 'info' && <Info />}
           {userStage === 'classes' && <Classes />}

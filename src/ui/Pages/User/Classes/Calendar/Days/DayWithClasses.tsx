@@ -1,25 +1,27 @@
 // Libs
 import React, { type FC } from 'react'
-import { Chip } from '@nextui-org/react'
 
 // Componets
 import styles from './styles.module.css'
 
 interface Props {
-  day: number
+  dayOfMonth: number
   currentDay: number
   children: React.ReactNode
 }
 
-export const DayWithClasses: FC<Props> = ({ currentDay, day, children }) => {
-  return <div className={`px-1 py-1 ${styles.day}`}>
-    <Chip
-      size='sm'
-      radius='full'
-      color={day === currentDay ? 'danger' : 'default'}>
-      {day}
-    </Chip>
-    <div className='flex flex-col gap-1 mt-1'>
+export const DayWithClasses: FC<Props> = ({ currentDay, dayOfMonth, children }) => {
+  return <div className={`${styles.day}`}>
+    <div
+      className={styles.dayNumber}
+      style={{
+        backgroundColor: currentDay === dayOfMonth ? 'var(--danger)' : 'transparent',
+        color: currentDay === dayOfMonth ? 'white' : 'var(--gray2)'
+      }}
+    >
+      {dayOfMonth}
+    </div>
+    <div className='flex flex-col'>
       {children}
     </div>
   </div>

@@ -1,31 +1,31 @@
 import { useUsersState, type User } from '@state'
-import { Input, Button, Avatar, Divider } from '@nextui-org/react'
+import { Input, Button, Avatar, Card, CardBody } from '@nextui-org/react'
 import { useState, type ChangeEvent, type MouseEvent, type FC, useEffect } from 'react'
+import styles from './styles.module.css'
+import { UserChip } from '../UserChip'
+import { userColor } from '@/utils/users'
 
 interface Props {
-  teacher: User
-  usersOfClass: User[]
-  getUsersIds?: (userIds: string[]) => void
-  getSelectedUsers?: (users: User[]) => void
+  getUserId?: (userIds: string | null) => void
+  getSelectedUser?: (user: User | null) => void
 }
 
-export const SearchUser: FC<Props> = ({ teacher, usersOfClass, getSelectedUsers, getUsersIds }) => {
+export const SearchUser: FC<Props> = ({ getSelectedUser, getUserId }) => {
+  const users = useUsersState(state => state.users)
   const [search, setSearch] = useState<string>('')
   const [searchResults, setSearchResults] = useState<User[]>([])
-  const [usersIds, setUsersIds] = useState<string[]>(() => usersOfClass.map(user => user.id))
-  const [selectedUsers, setSelectedUsers] = useState<User[]>(usersOfClass)
-
-  const users = useUsersState(state => state.users)
+  const [userId, setUserId] = useState<string | null>(null)
+  const [selectedUser, setSelectedUser] = useState<User | null>(null)
 
   useEffect(() => {
-    if (getSelectedUsers !== undefined) {
-      getSelectedUsers(selectedUsers)
+    if (getSelectedUser !== undefined) {
+      getSelectedUser(selectedUser)
     }
 
-    if (getUsersIds !== undefined) {
-      getUsersIds(usersIds)
+    if (getUserId !== undefined) {
+      getUserId(userId)
     }
-  }, [usersIds, selectedUsers])
+  }, [userId, selectedUser])
 
   // Botones de búsqueda usuarios y estilo
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -34,13 +34,7 @@ export const SearchUser: FC<Props> = ({ teacher, usersOfClass, getSelectedUsers,
 
     if (value.length > 3) {
       // Filtrar bien la busqueda
-      const internalUsers = users.filter(user => {
-        const isNameMatching = user.name.toLowerCase().includes(value.toLowerCase())
-        const isNotTeacher = user.id !== teacher.id
-        const isNotIncluded = !usersIds.includes(user.id)
-
-        return isNameMatching && isNotTeacher && isNotIncluded
-      })
+      const internalUsers = users.filter(user => user.name.toLowerCase().includes(value.toLowerCase()))
       setSearchResults(internalUsers)
     } else {
       setSearchResults([])
@@ -53,57 +47,63 @@ export const SearchUser: FC<Props> = ({ teacher, usersOfClass, getSelectedUsers,
     const userId = e.currentTarget.value
 
     if (name === 'add') {
-      const selectedUser = users.filter(user => user.id === userId && !usersIds.includes(userId))[0]
-      const newSearchResults = searchResults.filter(seachResult => seachResult.id !== selectedUser.id)
+      const selectedUser = users.filter(user => user.id === userId)[0]
 
-      setSearchResults(newSearchResults)
-
-      if (newSearchResults.length === 0) {
-        setSearch('')
-      }
-
-      setUsersIds([...usersIds, selectedUser.id])
-      setSelectedUsers([...selectedUsers, selectedUser])
+      setSearch('')
+      setSearchResults([])
+      setUserId(selectedUser.id)
+      setSelectedUser(selectedUser)
     } else if (name === 'delete') {
-      const filteredUsers = selectedUsers.filter(user => user.id !== userId)
-      const filteredUsersIds = filteredUsers.map(user => user.id)
-      setUsersIds(filteredUsersIds)
-      setSelectedUsers(filteredUsers)
+      setUserId(null)
+      setSelectedUser(null)
     }
   }
 
-  return (<div>
+  return (<div className='flex flex-col gap-2 relative'>
 
     <Input
+      color='secondary'
+      variant='bordered'
       type="text"
       label="Estudiantes"
       placeholder="Agregar Estudiantes"
+      className='relavite'
       name='estudiantes'
+      autoComplete='off'
       onChange={handleChange}
       value={search} />
 
-    <div className='bg-red-500 w-100%'>
+    {searchResults.length > 0 && <Card className={styles.searchContainer}>
       {searchResults.map(user => <Button
         key={user.id}
         name='add'
         value={user.id}
-        size='md'
-        className='py-1 px-1'
-        color={user.active_plan?.active === true ? 'success' : 'danger'}
-        isDisabled={user.active_plan?.active === false}
+        startContent={<Avatar src={user.image} size='sm' />}
+        endContent={<UserChip user={user} />}
+
+        variant='flat'
+        size='sm'
+        className='h-12 flex items-center justify-between'
+        color={userColor(user)}
+        isDisabled={user.active_plan?.active === true}
         onClick={handleUser}>
-        <Avatar src={user.image} size='sm' />
         {user.name}
       </Button>)}
-    </div>
+    </Card>}
 
-    <Divider />
-
-    <div>
-      {selectedUsers.map(user => <Button key={user.id} name='delete' value={user.id} size='md' className='py-1 px-1' onClick={handleUser}>
-        <Avatar src={user.image} size='sm' />
-        {user.name}
-      </Button>)}
-    </div>
+    {selectedUser !== null && <Card
+      className='flex absolute h-full w-full z-10 left-0 right-0 scale-105'>
+      <CardBody className='flex flex-row items-center justify-between align-middle'>
+        <Avatar
+          src={selectedUser.image}
+          isBordered size='sm'
+          color={selectedUser.active_plan === null
+            ? 'warning'
+            : selectedUser.active_plan.active ? 'success' : 'danger'}
+        />
+        <span>{selectedUser.name}</span>
+        <Button value={selectedUser.id} size='sm' onClick={handleUser} name='delete' color='danger' variant='flat'>delete</Button>
+      </CardBody>
+    </Card>}
   </div>)
 }

@@ -21,6 +21,8 @@ export const moths = [
   'Diciembre'
 ]
 
+export const days = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+
 export const danceGenders: DanceGender[] = ['salsa', 'bachata', 'reggaeton', 'dancehall', 'afro', 'champeta', 'urban', 'twerk', 'sexyStyle', 'latino', 'urbano']
 
 export const danceMode: DanceMode[] = ['couple', 'shining']

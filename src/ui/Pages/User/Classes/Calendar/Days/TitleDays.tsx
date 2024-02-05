@@ -1,7 +1,8 @@
-const days = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sábado']
+import styles from './styles.module.css'
+import { days } from '../../utils'
 
 export const TitleDays = () => {
   return <>
-    {days.map(day => <div key={day} className="outline outline-1 outline-red-500">{day}</div>)}
+    {days.map(day => <div key={day} className={styles.titleDay}>{day}</div>)}
   </>
 }
