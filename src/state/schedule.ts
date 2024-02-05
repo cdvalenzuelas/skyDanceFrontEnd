@@ -33,7 +33,7 @@ export interface ScheduleClass extends Omit<ScheduleClassFromDB, 'teacher'> {
 }
 
 // Las clases que vienen de la base de datos
-export interface DanceClassFromDB extends BaseClass {
+export interface DanceClassFromDB extends Omit<BaseClass, 'day'> {
   teacher: string
   users: string[]
   canceled: boolean

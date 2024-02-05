@@ -3,7 +3,6 @@
 // Libs
 import { type MouseEvent, useEffect } from 'react'
 import { Button } from '@nextui-org/react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
 
 // Components | State | types
@@ -20,6 +19,7 @@ import { ScheduleIcon } from './ScheduleIcon'
 import { ClassIcon } from './ClassIcon'
 import { SalesIcon } from './SalesIcon'
 import { PacksIcon } from './PacksIcon'
+import style from './styles.module.css'
 
 export interface Props {
   title: string
@@ -36,7 +36,7 @@ export default function User() {
   const saveClasses = useClassesState(state => state.saveClasses)
   const savePacks = usePacksState(state => state.setPacks)
   const userRole = useUserState(state => state.role)
-  const supabase = createClientComponentClient()
+  const userId = useUserState(state => state.id)
   const router = useRouter()
   const getDate = useDateState(state => state.getDate)
 
@@ -52,11 +52,9 @@ export default function User() {
 
     // Traer los datos del servidor
     (async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-
-      if (session?.user !== undefined) {
+      if (userId !== '') {
         // Traer la fecha actual
-        const { month, year } = getDate(true)
+        const { month, year } = getDate()
 
         // Traer todos los datos de la base de datos a la vez
         const [schedule, classes, users, packs] = await Promise.all([
@@ -67,11 +65,11 @@ export default function User() {
         ])
 
         saveSchedule(schedule)
-        saveClasses(classes)
+        saveClasses(`${year}-${month}`, classes)
         saveUsers(users)
         savePacks(packs)
       } else {
-        router.push('/')
+        router.replace('/')
       }
     })()
 
@@ -86,7 +84,7 @@ export default function User() {
       <Header />
       <div className='flex-1 overflow-auto flex justify-start'>
 
-        <aside className='flex flex-col items-center bg-primary xl:w-1/12 lg:w-1/12 md:w-1/6'>
+        <aside className={`flex flex-col items-center bg-primary xl:w-1/12 lg:w-1/12 md:w-1/6 ${style.aside}`}>
           <Button startContent={<ProfileIcon />} size='sm' radius='none' className='w-full' color='secondary' variant={userStage === 'info' ? 'solid' : 'flat'} onClick={handleClick} name='info'>Perflil</Button>
           <Button startContent={<ClassIcon />} size='sm' radius='none' className='w-full' color='secondary' variant={userStage === 'classes' ? 'solid' : 'flat'} onClick={handleClick} name='classes'>Clases</Button>
           <Button startContent={<ScheduleIcon />} size='sm' radius='none' className='w-full' color='secondary' variant={userStage === 'schedule' ? 'solid' : 'flat'} onClick={handleClick} name='schedule'>Horario</Button>

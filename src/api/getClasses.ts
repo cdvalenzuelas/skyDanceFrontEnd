@@ -19,9 +19,6 @@ export const getClasses = async (year: number, month: number): Promise<DanceClas
       .gte('date', `${year}-${month + 1}-01`) // Mayor o igual que el 1 de enero de 2024
       .lt('date', `${nextYear}-${nextMonth}-01`)
 
-    console.log(month, year)
-    console.log(data)
-
     // Si no viene data o hay un error lanzar error
     if (data === null || data.length === 0) {
       throw new Error()
@@ -36,7 +33,11 @@ export const getClasses = async (year: number, month: number): Promise<DanceClas
     const usersIds = classesFromDB.map(item => item.users).flat()
 
     const idsSet = new Set([...teachersIds, ...usersIds])
-    const ids = [...idsSet]
+    const ids2 = [...idsSet]
+
+    const ids = ids2.filter(item => item !== null && item !== '')
+
+    console.log(ids)
 
     const users = await populate<User[]>({ table: 'users', ids, select: '*' })
 
@@ -45,15 +46,19 @@ export const getClasses = async (year: number, month: number): Promise<DanceClas
       const teacher = users.filter(item2 => item2.id === item.teacher)[0]
 
       // Poblar los usuarios
-      const internalUsers = item.users.map(userId => {
+      let internalUsers = item.users.map(userId => {
         return users.filter(item3 => item3.id === userId)[0]
       })
+
+      internalUsers = internalUsers.filter(item3 => item3 !== undefined)
+
+      const dateOfClass = createDateFromString(item.date)
 
       return {
         ...item,
         teacher,
         users: internalUsers,
-        date: createDateFromString(item.date)
+        date: dateOfClass
       }
     })
 

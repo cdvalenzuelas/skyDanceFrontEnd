@@ -7,9 +7,10 @@ import { useUsersState, useClassesState, usePacksState } from '@state'
 import { createClass } from '@api'
 
 interface Props {
-  setOpenThisPortal: Dispatch<SetStateAction<boolean>>
   danceClass: DanceClass
   setInternalDanceClass: Dispatch<SetStateAction<DanceClass>>
+  setIsOpenEditableModals: Dispatch<SetStateAction<Record<string, boolean>>>
+  isOpnenEditableModals: Record<string, boolean>
 }
 
 interface DateToUpdate {
@@ -19,15 +20,16 @@ interface DateToUpdate {
   end_date: Date
 }
 
-type nameOptions = 'teacher' | 'users' | 'mode' | 'difficulty' | 'gender' | 'mode'
+type nameOptions = 'teacher' | 'users' | 'mode' | 'difficulty' | 'gender' | 'mode' | 'preview'
 
-export const useForm = ({ setOpenThisPortal, danceClass, setInternalDanceClass }: Props) => {
+export const useForm = ({ danceClass, setInternalDanceClass, setIsOpenEditableModals, isOpnenEditableModals }: Props) => {
   const [teachers, setTeachers] = useState<User[]>([])
   const addClass = useClassesState(state => state.addClass)
   const getTeachers = useUsersState(state => state.getTeachers)
   const udateUsersTakenClasses = useUsersState(state => state.udateUsersTakenClasses)
   const updateUsersDates = useUsersState(state => state.updateUsersDates)
   const packs = usePacksState(state => state.packs)
+  const [arrowState, setArrowState] = useState<boolean>(false)
 
   useEffect(() => {
     setTeachers(getTeachers())
@@ -35,11 +37,12 @@ export const useForm = ({ setOpenThisPortal, danceClass, setInternalDanceClass }
 
   // Botones de búsqueda usuarios y estilo
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const name = e.target.name as 'price' | 'style'
     const value = e.currentTarget.value
 
     setInternalDanceClass({
       ...danceClass,
-      style: value
+      [name]: value
     })
   }
 
@@ -64,11 +67,13 @@ export const useForm = ({ setOpenThisPortal, danceClass, setInternalDanceClass }
   }
 
   const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
-    const name = e.currentTarget.name as 'close' | 'save'
+    const name = e.currentTarget.name as 'close' | 'save' | 'preview'
 
-    if (name === 'close') {
-      setOpenThisPortal(false)
-    } else if (name === 'save') {
+    if (name === 'preview') {
+      setArrowState(!arrowState)
+    }
+
+    if (name === 'save') {
       e.preventDefault()
 
       // Vamos a comparar fechas
@@ -109,11 +114,19 @@ export const useForm = ({ setOpenThisPortal, danceClass, setInternalDanceClass }
         }
       })
       // Actualizar las clases de los usuarios en el estado
+      const isOpnenModals2 = JSON.parse(JSON.stringify(isOpnenEditableModals)) as Record<string, boolean>
+      isOpnenModals2[danceClass.date.getDate()] = !isOpnenModals2[danceClass.date.getDate()]
       const [data] = await createClass(danceClass, datesToUpdate)
+
+      setIsOpenEditableModals(isOpnenModals2)
       updateUsersDates(datesToUpdate)
       udateUsersTakenClasses(usersIds)
-      addClass(data)
-      setOpenThisPortal(false)
+      addClass(`${classDate.getFullYear()}-${classDate.getMonth()}`, data)
+    } else if (name === 'close') {
+      const isOpnenModals2 = JSON.parse(JSON.stringify(isOpnenEditableModals)) as Record<string, boolean>
+
+      isOpnenModals2[danceClass.date.getDate()] = !isOpnenModals2[danceClass.date.getDate()]
+      setIsOpenEditableModals(isOpnenModals2)
     }
   }
 
@@ -130,6 +143,7 @@ export const useForm = ({ setOpenThisPortal, danceClass, setInternalDanceClass }
     handleSubmit,
     handleChange,
     handleClick,
-    getSelectedUsers
+    getSelectedUsers,
+    arrowState
   }
 }

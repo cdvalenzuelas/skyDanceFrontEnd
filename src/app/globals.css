@@ -11,6 +11,12 @@
   --blue1: #009cd3;
   --blue2: #67c6da;
   --withe: #fff;
+  --gray1: #f1f5f9;
+  --gray2: #94a3b8;
+  --danger: #f31260;
+  --warning: #f5a524;
+  --success: #17c964;
+  color: var(--gray2);
 }
 
 *,
@@ -22,27 +28,35 @@
   box-sizing: border-box;
 }
 
-@media only screen and (max-width: 576px) {
+@media only screen and (max-width: 768px) and (orientation: portrait) {
   :root {
-    font-size: 8px;
+    font-size: 6px;
+  }
+
+  .mobileHide {
+    display: none;
   }
 
   h1 {
-    font-size: 14px;
-  }
-
-  h2 {
     font-size: 12px;
   }
 
-  h3 {
+  h2 {
     font-size: 10px;
+  }
+
+  h3 {
+    font-size: 8px;
   }
 }
 
 @media only screen and (max-width: 768px) {
   :root {
     font-size: 10px;
+  }
+
+  .desktopHide {
+    display: none;
   }
 
   h1 {
@@ -63,6 +77,10 @@
     font-size: 12px;
   }
 
+  .desktopHide {
+    display: none;
+  }
+
   h1 {
     font-size: 18px;
   }
@@ -79,6 +97,10 @@
 @media only screen and (max-width: 1280px) {
   :root {
     font-size: 14px;
+  }
+
+  .desktopHide {
+    display: none;
   }
 
   h1 {
@@ -99,18 +121,19 @@
     font-size: 16px;
   }
 
+  .desktopHide {
+    display: none;
+  }
+
   h1 {
     font-size: 20px;
-    /* O más, según preferencia */
   }
 
   h2 {
     font-size: 16px;
-    /* O más, según preferencia */
   }
 
   h3 {
     font-size: 18px;
-    /* O más, según preferencia */
   }
 }

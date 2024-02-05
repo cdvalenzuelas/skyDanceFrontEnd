@@ -9,14 +9,13 @@ export interface AppDate {
   startDay: number
   daysAtMoth: number
 }
-
-interface Actions {
-  getDate: (current: Current) => { day: number, month: number, year: number, daysAtMoth: number, startDay: number }
-  setDate: (moth: number, year: number) => void
+interface Data {
+  month: number
+  year: number
 }
-
-type Current = boolean
-
+interface Actions {
+  getDate: (data?: Data) => { day: number, month: number, year: number, daysAtMoth: number, startDay: number }
+}
 // ************************STATE***********************
 
 const UserStateApi: StateCreator<AppDate & Actions> = (set, get) => ({
@@ -25,11 +24,11 @@ const UserStateApi: StateCreator<AppDate & Actions> = (set, get) => ({
   year: 1,
   startDay: 0,
   daysAtMoth: 0,
-  getDate: (curent) => {
-    const date = curent ? new Date() : new Date(get().year, get().month, 1)
+  getDate: (data) => {
+    const date = data === undefined ? new Date() : new Date(data.year, data.month, 1)
     const year = date.getFullYear()
     const month = date.getMonth()
-    const day = date.getDate()
+    const day = data === undefined ? date.getDate() : 0
 
     // DETERMINATE THE DAYS OF THE MOTH
     const nextMoth = month === 11 ? 1 : month + 1
@@ -46,9 +45,6 @@ const UserStateApi: StateCreator<AppDate & Actions> = (set, get) => ({
     set({ day, month, year, daysAtMoth, startDay })
 
     return { day, month, year, daysAtMoth, startDay }
-  },
-  setDate(month, year) {
-    set({ month, year })
   }
 })
 

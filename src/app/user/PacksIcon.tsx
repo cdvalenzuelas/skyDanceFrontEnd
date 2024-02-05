@@ -1,10 +1,14 @@
 import styles from './styles.module.css'
 
-export const PacksIcon = () => (
+interface Props {
+  color?: string
+}
+
+export const PacksIcon = ({ color = '#fff' }: Props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
-    stroke="#fff"
+    stroke={color}
     strokeLinecap="round"
     strokeLinejoin="round"
     strokeWidth={1.5}
