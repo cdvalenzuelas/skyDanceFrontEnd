@@ -4,7 +4,7 @@ import { Button } from '@nextui-org/react'
 
 // Components
 import { NewSaleModal } from './NewSaleModal.tsx'
-import { SalesTable } from './SalesTable'
+// import { SalesTable } from './SalesTable'
 
 export const Sales = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
