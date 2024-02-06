@@ -13,7 +13,7 @@ export const useUserAndPackChange = ({ user, sale, pack, paymentMode }: Props) =
   let internalSale = JSON.parse(JSON.stringify(sale)) as Sale
   const { duration, period, classes, price, name, id } = pack
   const [startDateMessage, endDate, currentDay] = endDateOfPack(period, duration)
-  const istPromotionsDays = currentDay <= 5 || (currentDay >= 15 && currentDay <= 20)
+  const istPromotionsDays = currentDay <= 11 || (currentDay >= 15 && currentDay <= 20)
   let promotion = ''
   let userId = ''
   let discountPercentage = 0
