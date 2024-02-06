@@ -60,7 +60,6 @@ export const SearchUser: FC<Props> = ({ getSelectedUser, getUserId }) => {
   }
 
   return (<div className='flex flex-col gap-2 relative'>
-
     <Input
       color='secondary'
       variant='bordered'
@@ -78,14 +77,14 @@ export const SearchUser: FC<Props> = ({ getSelectedUser, getUserId }) => {
         key={user.id}
         name='add'
         value={user.id}
-        startContent={<Avatar src={user.image} size='sm' />}
+        startContent={<Avatar src={user.image} size='sm' isBordered color={userColor(user)} />}
         endContent={<UserChip user={user} />}
 
         variant='flat'
         size='sm'
         className='h-12 flex items-center justify-between'
         color={userColor(user)}
-        isDisabled={user.active_plan?.active === true}
+        isDisabled={user.active_plan?.active === true || user.role !== 'user'}
         onClick={handleUser}>
         {user.name}
       </Button>)}
@@ -97,9 +96,7 @@ export const SearchUser: FC<Props> = ({ getSelectedUser, getUserId }) => {
         <Avatar
           src={selectedUser.image}
           isBordered size='sm'
-          color={selectedUser.active_plan === null
-            ? 'warning'
-            : selectedUser.active_plan.active ? 'success' : 'danger'}
+          color={userColor(selectedUser)}
         />
         <span>{selectedUser.name}</span>
         <Button value={selectedUser.id} size='sm' onClick={handleUser} name='delete' color='danger' variant='flat'>delete</Button>

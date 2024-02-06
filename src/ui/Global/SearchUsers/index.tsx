@@ -4,6 +4,8 @@ import { useState, type ChangeEvent, type MouseEvent, type FC, useEffect } from 
 import styles from './styles.module.css'
 import { UserChip } from '../UserChip'
 import { userColor } from '@/utils/users'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrashCan } from '@fortawesome/free-regular-svg-icons'
 
 interface Props {
   teacher: User
@@ -98,13 +100,13 @@ export const SearchUsers: FC<Props> = ({ teacher, usersOfClass, getSelectedUsers
         key={user.id}
         name='add'
         value={user.id}
-        startContent={<Avatar src={user.image} size='sm' />}
+        startContent={<Avatar src={user.image} size='sm' color={userColor(user)} isBordered />}
         endContent={<UserChip user={user}></UserChip>}
         variant='flat'
         size='sm'
         className='h-12 flex items-center justify-between px-5'
-        color={userColor(user)}
-        isDisabled={user.active_plan?.active === false}
+        color={(user.active_plan === null && user.role === 'user') ? 'danger' : userColor(user)}
+        isDisabled={user.active_plan?.active === false || (user.active_plan === null && user.role === 'user')}
         onClick={handleUser}>
         {user.name}
       </Button>)}
@@ -122,11 +124,21 @@ export const SearchUsers: FC<Props> = ({ teacher, usersOfClass, getSelectedUsers
 
         {selectedUsers.map(user => <Card
           key={user.id}
-          className='flex py-0.5 px-0.5'>
-          <CardBody className='flex flex-row items-center justify-between align-middle'>
-            <Avatar src={user.image} size='sm' />
+          className='flex py-1 px-1 h-10'>
+          <CardBody className='flex flex-row items-center justify-between align-middle py-1'>
+            <Avatar src={user.image} size='sm' color={userColor(user)} isBordered className='h-5 w-5' />
             <span>{user.name}</span>
-            <Button value={user.id} size='sm' onClick={handleUser} name='delete' color='danger' variant='flat'>delete</Button>
+            <Button
+              value={user.id}
+              size='sm'
+              onClick={handleUser}
+              name='delete'
+              color='danger'
+              variant='light'
+              className='h-5'
+              isIconOnly
+              startContent={<FontAwesomeIcon className='h-4' icon={faTrashCan} style={{ color: 'var(--danger)' }} />}
+            />
           </CardBody>
         </Card>)}
 

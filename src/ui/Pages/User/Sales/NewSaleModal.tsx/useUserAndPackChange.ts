@@ -1,13 +1,14 @@
-import type { User, Sale, Pack } from '@state'
+import type { User, Sale, Pack, PaymentMode } from '@state'
 import { endDateOfPack } from '../utils'
 
 interface Props {
   user: User | null
   sale: Sale
   pack: Pack
+  paymentMode: PaymentMode
 }
 
-export const useUserAndPackChange = ({ user, sale, pack }: Props) => {
+export const useUserAndPackChange = ({ user, sale, pack, paymentMode }: Props) => {
   // DEFINIR TODAS LAS CONSTANTES
   let internalSale = JSON.parse(JSON.stringify(sale)) as Sale
   const { duration, period, classes, price, name, id } = pack
@@ -17,6 +18,9 @@ export const useUserAndPackChange = ({ user, sale, pack }: Props) => {
   let userId = ''
   let discountPercentage = 0
   let discountDescription = ''
+  let courtesPackId = 'ac57ae16-3603-4c4a-ac43-4955f3f05106'
+
+  internalSale.payment_mode = paymentMode
 
   // Cambia el pack
   internalSale = {
@@ -31,6 +35,7 @@ export const useUserAndPackChange = ({ user, sale, pack }: Props) => {
 
   // Si elimina el usuario
   if (user === null) {
+    courtesPackId = ''
     promotion = ''
   } else {
     userId = user.id
@@ -39,6 +44,7 @@ export const useUserAndPackChange = ({ user, sale, pack }: Props) => {
       promotion = 'Eres nuevo por aquí, así que te damos un 20% de descuento en tu primera compra (aplica para todos los planes).'
       discountPercentage = 0.2
       discountDescription = 'new user'
+      courtesPackId = ''
     } else {
       // Si su plan está vencido pero hay día de promoció
       if (!user.active_plan.active && istPromotionsDays) {
@@ -69,6 +75,7 @@ export const useUserAndPackChange = ({ user, sale, pack }: Props) => {
   return {
     startDateMessage,
     promotion,
-    internalSale
+    internalSale,
+    courtesPackId
   }
 }

@@ -104,6 +104,7 @@ export const Calendar = () => {
               scheduleByDay={scheduleByDay}
               classesByDay={classesByDay}
               userRole={userRole}
+              userId={userId}
             />
 
             {/* Cada vez que quiere editar una clase */}

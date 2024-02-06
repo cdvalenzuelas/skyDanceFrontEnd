@@ -11,11 +11,31 @@ interface Props {
   classesByDay: DanceClass[]
   handleClick: (e: MouseEvent<HTMLButtonElement>, day: number) => void
   userRole: UserRole
+  userId: string
 }
 
-export const MobileClassButtons: FC<Props> = ({ dayOfMonth, scheduleByDay, handleClick, classesByDay, userRole }) => {
+export const MobileClassButtons: FC<Props> = ({ dayOfMonth, scheduleByDay, handleClick, classesByDay, userRole, userId }) => {
   const therAreSomeClass = scheduleByDay.length > 0 || classesByDay.length > 0
   const isAdmin = userRole === 'admin' || userRole === 'superAdmin'
+
+  // Traer las clases dependiendo de si es admin o no
+  classesByDay = classesByDay.filter(item => {
+    if (userRole === 'admin' || userRole === 'superAdmin') {
+      return true
+    }
+
+    const usersIds = item.users.map(item2 => item.id)
+    if (usersIds.includes(userId)) {
+      return true
+    }
+
+    const teacherId = item.teacher.id
+    if (userId === teacherId) {
+      return true
+    }
+
+    return false
+  })
 
   if (isAdmin && therAreSomeClass) {
     return <><div

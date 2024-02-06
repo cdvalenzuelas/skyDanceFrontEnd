@@ -1,5 +1,5 @@
 // Libs
-import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Select, SelectItem, Input, Divider, Textarea } from '@nextui-org/react'
+import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Select, SelectItem, Input, Divider, Textarea, Chip } from '@nextui-org/react'
 import type { Dispatch, FC, MouseEvent, SetStateAction } from 'react'
 
 // Components
@@ -21,7 +21,8 @@ export const NewSaleModal: FC<Props> = ({ isOpen, handleOpen, setIsOpen }) => {
     internalSale,
     pack,
     getUser,
-    promotion
+    promotion,
+    courtesPackId
   } = useNewSaleModal({ setIsOpen })
 
   return (<Modal placement='center' isOpen={isOpen} size='lg' backdrop='blur' className='px-5 py-3'>
@@ -32,6 +33,8 @@ export const NewSaleModal: FC<Props> = ({ isOpen, handleOpen, setIsOpen }) => {
       </ModalHeader>
 
       <ModalBody>
+
+        {courtesPackId !== '' && <Chip color='danger' variant='flat' size='sm'>El usurio ya ha tedido clase de cortesía</Chip>}
 
         <SearchUser
           getSelectedUser={getUser}
@@ -47,8 +50,16 @@ export const NewSaleModal: FC<Props> = ({ isOpen, handleOpen, setIsOpen }) => {
             defaultSelectedKeys={[packs[0].id]}
             variant='bordered'
             color='secondary'
+            disabledKeys={[courtesPackId]}
           >
-            {packs.map(pack => <SelectItem color='secondary' key={pack.id} onClick={e => { handSelect(e, 'pack') }}>{pack.name}</SelectItem>)}
+            {packs.map(pack => <SelectItem
+              color='secondary'
+              key={pack.id}
+              onClick={e => { handSelect(e, 'pack') }}
+            >
+              {pack.name}
+            </SelectItem>
+            )}
           </Select>}
 
           <Select
@@ -124,7 +135,13 @@ export const NewSaleModal: FC<Props> = ({ isOpen, handleOpen, setIsOpen }) => {
 
       <ModalFooter>
         <Button name='close' size='sm' color='danger' variant='ghost' onClick={handleOpen}>Cerrar</Button>
-        <Button size='sm' color='primary' onClick={handleSubmit} isDisabled={internalSale.user_id === ''}>Crear</Button>
+        <Button
+          size='sm'
+          color='primary'
+          onClick={handleSubmit}
+          isDisabled={internalSale.user_id === '' || (courtesPackId !== '' && pack.id === courtesPackId)}
+        >Crear
+        </Button>
       </ModalFooter>
 
     </ModalContent>

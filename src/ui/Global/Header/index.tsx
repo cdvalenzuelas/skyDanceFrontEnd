@@ -7,22 +7,29 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 // Componets
-import { useUserState, useUsersStage, type UserStageType } from '@state'
+import { useUserState, useUsersStage, useUsersState, type UserStageType } from '@state'
 import styles from './styles.module.css'
 import { ProfileIcon } from '@/app/user/ProfileIcon'
 import { ClassIcon } from '@/app/user/ClassIcon'
 import { PacksIcon } from '@/app/user/PacksIcon'
 import { ScheduleIcon } from '@/app/user/ScheduleIcon'
 import { SalesIcon } from '@/app/user/SalesIcon'
+import { userColor } from '@/utils/users'
 
 export const Header = () => {
-  const mail = useUserState(state => state.mail)
-  const avatarImage = useUserState(state => state.image)
-  const active = useUserState(state => state.active_plan?.active)
-  const userStage = useUsersStage(state => state.userStage)
-  const userRole = useUserState(state => state.role)
+  const userId = useUserState(state => state.id)
+  const users = useUsersState(item => item.users)
   const setUserStage = useUsersStage(state => state.setUserStage)
+  const userStage = useUsersStage(state => state.userStage)
   const pathName = usePathname()
+
+  const user = users.filter(item2 => item2.id === userId)[0]
+
+  if (user === undefined) {
+    return null
+  }
+
+  const { role, mail, image } = user
 
   // CLICK
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
@@ -91,7 +98,7 @@ export const Header = () => {
           className={pathName !== '/user' ? 'mobileHide' : ''}
         />
 
-        {(userRole === 'admin' || userRole === 'superAdmin') && <Button
+        {(role === 'admin' || role === 'superAdmin') && <Button
           size='md'
           color='secondary'
           variant='light'
@@ -110,8 +117,8 @@ export const Header = () => {
           <Link href='/user'>
             <Avatar
               isBordered
-              color={active === undefined ? 'warning' : active ? 'success' : 'danger'}
-              src={avatarImage} size='sm' />
+              color={userColor(user)}
+              src={image} size='sm' />
           </Link>
         }
 
@@ -128,8 +135,8 @@ export const Header = () => {
             style={{ borderBottom: userStage === 'info' ? '2px solid #009cd3' : 'none' }}
             startContent={<Avatar
               isBordered
-              color={active === undefined ? 'warning' : active ? 'success' : 'danger'}
-              src={avatarImage} size='sm' />}
+              color={userColor(user)}
+              src={image} size='sm' />}
           />
         }
       </nav>

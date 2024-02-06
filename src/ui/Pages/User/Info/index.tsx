@@ -1,20 +1,23 @@
 import { Card, CardBody, CardFooter, CardHeader, Chip, Divider, Textarea, User } from '@nextui-org/react'
-import { useUserState } from '@state'
+import { useUserState, useUsersState } from '@state'
 import { getDaysBetweenTwoDates, formardate } from '@/utils/dates'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons'
+import { UserChip } from '@/ui/Global/UserChip'
+import { userColor } from '@/utils/users'
 
 export const Info = () => {
   // VIENE DEL ESTADO
-  const name = useUserState(state => state.name)
-  const mail = useUserState(state => state.mail)
-  const phone = useUserState(state => state.phone)
-  const instagram = useUserState(state => state.instagram_id)
-  const activePlan = useUserState(state => state.active_plan)
-  const image = useUserState(state => state.image)
+  const userId = useUserState(state => state.id)
+  const users = useUsersState(item => item.users)
+  const user = users.filter(item2 => item2.id === userId)[0]
 
-  const daysBetweenTwoDates = activePlan !== null
-    ? getDaysBetweenTwoDates(activePlan.end_date, new Date())
+  if (user === undefined) {
+    return null
+  }
+
+  const daysBetweenTwoDates = user.active_plan !== null
+    ? getDaysBetweenTwoDates(user.active_plan.end_date, new Date())
     : 0
 
   return (<section className='flex flex-col gap-5 px-5 py-5 items-center justify-center h-full'>
@@ -22,23 +25,16 @@ export const Info = () => {
 
       <CardHeader className='flex justify-between mb-2 gap-5'>
         <User
-          name={name}
-          description={instagram}
+          name={user.name}
+          description={user.instagram_id}
           avatarProps={{
-            src: `${image}`,
+            src: `${user.image}`,
             isBordered: true,
-            color: activePlan === null
-              ? 'warning'
-              : activePlan.active ? 'success' : 'danger'
+            color: userColor(user)
           }}
         />
 
-        <Chip color={activePlan === null
-          ? 'warning'
-          : activePlan.active ? 'success' : 'danger'}
-        >
-          {activePlan?.active === true ? 'Activo' : 'Inactivo'}
-        </Chip>
+        <UserChip user={user} />
       </CardHeader>
 
       <Divider />
@@ -51,11 +47,11 @@ export const Info = () => {
           variant='bordered'
           size='lg'
           style={{ margin: '1rem 0' }}>
-          Plan: {activePlan?.name === undefined ? 'Ninguno' : activePlan.name}
+          Plan: {user.active_plan?.name === undefined ? 'Ninguno' : user.active_plan.name}
         </Chip>
 
         {/* Si el usuario es nuevo hacerle una promoción */}
-        {activePlan === null && <Textarea
+        {user.active_plan === null && <Textarea
           isReadOnly
           color='warning'
           type="text"
@@ -66,33 +62,33 @@ export const Info = () => {
         />}
 
         {/* El susurio ya tiene una clase cortesía registrada */}
-        {activePlan !== null && <>
+        {user.active_plan !== null && <>
 
           {/* SI EL PLAN ES ACTIVO */}
           <div className='flex justify-between w-full gap-5'>
 
-            Clases: {activePlan?.taken_classes} / {activePlan?.classes === -1 ? '∞' : activePlan.classes}
+            Clases: {user.active_plan?.taken_classes} / {user.active_plan?.classes === -1 ? '∞' : user.active_plan.classes}
 
-            {activePlan.classes !== -1 &&
+            {user.active_plan?.classes !== -1 &&
               <Chip size='sm'
-                color={activePlan.taken_classes < activePlan.classes
+                color={user.active_plan.taken_classes < user.active_plan.classes
                   ? 'success'
                   : 'danger'}
               >
-                {activePlan.taken_classes < activePlan.classes
-                  ? `Te quedan ${activePlan.classes - activePlan.taken_classes} clases`
+                {user.active_plan.taken_classes < user.active_plan.classes
+                  ? `Te quedan ${user.active_plan.classes - user.active_plan.taken_classes} clases`
                   : 'Acabaste tus Clases'}
               </Chip>
             }
 
           </div>
 
-          <span>Compa: {formardate(activePlan.sale_date)}</span>
-          <span>Inicio: {formardate(activePlan.start_date)}</span>
+          <span>Compa: {formardate(user.active_plan.sale_date)}</span>
+          <span>Inicio: {formardate(user.active_plan.start_date)}</span>
 
           <div className='flex justify-between w-full gap-5'>
 
-            Fin: {formardate(activePlan.end_date)}
+            Fin: {formardate(user.active_plan.end_date)}
 
             <Chip size='sm'
               color={daysBetweenTwoDates === 0
@@ -111,8 +107,8 @@ export const Info = () => {
       <Divider />
 
       <CardFooter className='flex flex-col gap-2 items-start'>
-        <span><FontAwesomeIcon icon={faEnvelope} style={{ color: 'var(--blue1)' }} />: {mail}</span>
-        <span><FontAwesomeIcon icon={faPhone} style={{ color: 'var(--blue1)' }} />: {phone}</span>
+        <span><FontAwesomeIcon icon={faEnvelope} style={{ color: 'var(--blue1)' }} />: {user.mail}</span>
+        <span><FontAwesomeIcon icon={faPhone} style={{ color: 'var(--blue1)' }} />: {user.phone}</span>
       </CardFooter>
 
     </Card>

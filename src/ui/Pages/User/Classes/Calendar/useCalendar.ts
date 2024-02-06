@@ -43,7 +43,7 @@ export const useCalendar = () => {
       setHoursOfClassesByDay(`${state.year}-${state.month}`)
       setClasses(classesStore[`${state.year}-${state.month}`])
     }
-  }, [classes.length, state])
+  }, [JSON.stringify(classesStore), JSON.stringify(state)])
 
   const handleClick = (e: MouseEvent<HTMLButtonElement>, day: number) => {
     const name = e.currentTarget.name as 'mobile' | 'readable' | 'editable'
@@ -109,8 +109,6 @@ export const useCalendar = () => {
     startDay: number
   }) => {
     const condition = classesStore[`${data.year}-${data.month}`] === undefined
-
-    console.log(data)
 
     if (condition) {
       const newClasses = await getClasses(data.year, data.month)

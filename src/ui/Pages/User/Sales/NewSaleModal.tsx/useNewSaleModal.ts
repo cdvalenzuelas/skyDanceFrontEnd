@@ -20,10 +20,12 @@ export const useNewSaleModal = ({ setIsOpen }: Props) => {
 
   const [user, setUser] = useState<User | null>(null)
   const [pack, setPack] = useState<Pack>(packs[0])
+  const [paymentMode, setPaymentMode] = useState<PaymentMode>('chash')
 
+  // Si el usuario ya esta establecido y se le quier dar una cortesía pero ya ha comprado algo antes
   const defaultSale = createDefaultSale(packs[0])
 
-  const { startDateMessage, promotion, internalSale } = useUserAndPackChange({ user, pack, sale: defaultSale })
+  const { startDateMessage, promotion, internalSale, courtesPackId } = useUserAndPackChange({ user, pack, sale: defaultSale, paymentMode })
 
   // Functions
   const getUser = (user: User | null): void => {
@@ -49,11 +51,9 @@ export const useNewSaleModal = ({ setIsOpen }: Props) => {
     } else if (name === 'paymentMode') {
       const paymentMode = e.currentTarget.dataset.key as PaymentMode
 
-      internalSale.payment_mode = paymentMode
+      setPaymentMode(paymentMode)
     }
   }
-
-  console.log(internalSale)
 
   return {
     handles: { handSelect, handleSubmit },
@@ -62,6 +62,7 @@ export const useNewSaleModal = ({ setIsOpen }: Props) => {
     internalSale,
     pack,
     getUser,
-    promotion
+    promotion,
+    courtesPackId
   }
 }
