@@ -9,5 +9,6 @@
 }
 
 .accordion {
-  width: 50% !important;
+  width: 80% !important;
+  margin: 0 auto;
 }
