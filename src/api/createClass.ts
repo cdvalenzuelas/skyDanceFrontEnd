@@ -84,7 +84,8 @@ export const createClass = async (danceClass: DanceClass, datesToUpdate: DateToU
     // Tomar el id de la clase creada y agregarla ala estado
     return [{
       ...danceClass,
-      id: classesFromDB.id
+      id: classesFromDB.id,
+      date: new Date(danceClass.date)
     }]
   } catch {
     return []

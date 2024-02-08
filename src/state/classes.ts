@@ -35,7 +35,8 @@ const UserStateApi: StateCreator<AppClasses & Actions> = (set, get) => ({
     let internalHoursOfClassesByDay: Record<string, number[]> = {}
 
     get().classesStore[yearMonth].forEach(item => {
-      const day = String(item.date.getDate())
+      const date = new Date(item.date)
+      const day = String(date.getDate())
 
       let value: Record<string, number[]>
 

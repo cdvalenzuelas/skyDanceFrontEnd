@@ -43,7 +43,6 @@ export default function User() {
   // CLICK
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     const name = e.currentTarget.name as UserStageType
-    e.preventDefault()
     setUserStage(name)
   }
 

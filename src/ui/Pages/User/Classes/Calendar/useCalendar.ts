@@ -20,6 +20,8 @@ export const useCalendar = () => {
   const [classToEdit, setClassToEdit] = useState<ScheduleClass>(schedule[0])
   const [classToRead, setClassToRead] = useState<DanceClass>(classes[0])
 
+  const currentDate = new Date()
+
   useEffect(() => {
     // Saber en que mes y año estamos
     const data = getDate()
@@ -95,6 +97,8 @@ export const useCalendar = () => {
 
       input = { month: newMonth, year: newYear }
     }
+
+    input = input?.month === currentDate.getMonth() && input.year === currentDate.getFullYear() ? undefined : input
 
     const data = getDate(input)
 

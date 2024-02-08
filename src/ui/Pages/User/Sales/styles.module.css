@@ -1,0 +1,9 @@
+.newSale {
+  position: fixed;
+  bottom: 2rem;
+  right: 1rem;
+}
+
+.card {
+  padding: 1.5rem;
+}

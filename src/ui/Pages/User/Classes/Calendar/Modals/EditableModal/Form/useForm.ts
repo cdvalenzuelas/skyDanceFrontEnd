@@ -30,6 +30,7 @@ export const useForm = ({ danceClass, setInternalDanceClass, setIsOpenEditableMo
   const updateUsersDates = useUsersState(state => state.updateUsersDates)
   const packs = usePacksState(state => state.packs)
   const [arrowState, setArrowState] = useState<boolean>(false)
+  const [userWishDeleteClass, setUserWishDeleteClass] = useState<boolean>(false)
 
   useEffect(() => {
     setTeachers(getTeachers())
@@ -67,15 +68,38 @@ export const useForm = ({ danceClass, setInternalDanceClass, setIsOpenEditableMo
   }
 
   const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
-    const name = e.currentTarget.name as 'close' | 'save' | 'preview'
+    const name = e.currentTarget.name as 'close' | 'save' | 'preview' | 'delete' | 'confirmDelete'
 
     if (name === 'preview') {
       setArrowState(!arrowState)
     }
 
-    if (name === 'save') {
-      e.preventDefault()
+    if (name === 'delete') {
+      setUserWishDeleteClass(!userWishDeleteClass)
+    }
 
+    if (name === 'confirmDelete') {
+      let newClassToCreate = JSON.parse(JSON.stringify(danceClass)) as DanceClass
+      const isOpnenModals2 = JSON.parse(JSON.stringify(isOpnenEditableModals)) as Record<string, boolean>
+      isOpnenModals2[danceClass.date.getDate()] = !isOpnenModals2[danceClass.date.getDate()]
+
+      newClassToCreate = {
+        ...newClassToCreate,
+        canceled: true,
+        price: 0,
+        users: [],
+        done: true
+      }
+
+      const [data] = await createClass(newClassToCreate, [])
+
+      const date = new Date(data.date)
+
+      addClass(`${date.getFullYear()}-${date.getMonth()}`, data)
+      setIsOpenEditableModals(isOpnenModals2)
+    }
+
+    if (name === 'save') {
       // Vamos a comparar fechas
       const classDate = danceClass.date
 
@@ -144,6 +168,7 @@ export const useForm = ({ danceClass, setInternalDanceClass, setIsOpenEditableMo
     handleChange,
     handleClick,
     getSelectedUsers,
-    arrowState
+    arrowState,
+    userWishDeleteClass
   }
 }

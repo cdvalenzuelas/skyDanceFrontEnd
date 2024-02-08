@@ -40,7 +40,7 @@ export const useUserAndPackChange = ({ user, sale, pack, paymentMode }: Props) =
   } else {
     userId = user.id
     // Si es una cortesía
-    if (user.active_plan === null) {
+    if (user.active_plan === null || user.active_plan.name === 'cortesia') {
       promotion = 'Eres nuevo por aquí, así que te damos un 20% de descuento en tu primera compra (aplica para todos los planes).'
       discountPercentage = 0.2
       discountDescription = 'new user'

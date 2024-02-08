@@ -87,7 +87,7 @@ export const MobileDayModal: FC<Props> = ({ scheduleByDay, classesByDay, handleC
             <Chip color='secondary' size='sm'>{item.hour} a {item.hour + 1}</Chip>
           }
           key={item.id}
-          color='success'
+          color={item.canceled ? 'danger' : 'success'}
           name='readable'
           value={item.id}
           onClick={e => { handleClick(e, dayOfMonth) }} >

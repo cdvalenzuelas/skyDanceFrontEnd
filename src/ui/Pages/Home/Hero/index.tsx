@@ -15,15 +15,52 @@ export const Hero = () => {
 
   return (
     <div className={`flex flex-col shadow gap-3 ${styles.hero}`}>
+
       <Header />
+
       <div className={`flex flex-col items-center w-full h-full justify-between ${styles.container}`}>
+
         <H1>Sky Dance</H1>
+
         <h2>Convierte cada paso en arte</h2>
+
         <p className="text-center">En SKY DANCE, Bogotá cobra vida con Salsa, Bachata, Reggaetón y más. 🎶 Únete a nosotros para clases vibrantes, eventos únicos y una comunidad que adora bailar. 🌟</p>
+
         <div className='flex gap-5 relative z-10' >
-          <Button startContent={<WhatsappIcon />} href="https://wa.link/g96ox3" isExternal as={Link2} color='primary' size='lg' style={{ backgroundColor: '#25D366' }} className={styles.button}>Contáctanos</Button>
-          {mail === '' && <Button className={styles.button} href="/login" as={Link2} color='primary' size='lg'>Empezar</Button>}
+
+          <Button
+            startContent={<WhatsappIcon />}
+            href="https://wa.link/g96ox3"
+            isExternal
+            as={Link2}
+            color='primary'
+            size='lg'
+            style={{ backgroundColor: '#25D366' }}
+            className={styles.button}>
+            Contáctanos
+          </Button>
+
+          {mail === '' &&
+            <Button
+              className={styles.button}
+              href="/login"
+              as={Link2}
+              color='primary'
+              size='lg'>
+              Empezar
+            </Button>}
+
+          {mail !== '' && <Button
+            className={styles.button}
+            as={Link2}
+            href="/user"
+            color='primary'
+            size='lg'>
+            Empezar
+          </Button>}
+
         </div>
+
       </div>
     </div>
   )

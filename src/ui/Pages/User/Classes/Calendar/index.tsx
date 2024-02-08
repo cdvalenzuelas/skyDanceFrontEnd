@@ -9,6 +9,10 @@ import { Button } from '@nextui-org/react'
 
 export const Calendar = () => {
   const { date, classes, userRole, handleClick, modals, handleMonth, userId } = useCalendar()
+  const curentdate = new Date()
+
+  const currentMonth = curentdate.getMonth()
+  const currentYear = curentdate.getFullYear()
 
   return (
     <>
@@ -17,17 +21,18 @@ export const Calendar = () => {
         <div>
 
           <Button
-            size='sm'
+            size='md'
             color='secondary'
             onClick={handleMonth}
             name='less'
             variant='light'
             isIconOnly
             startContent={<span>{'<'}</span>}
+            disabled={date.year === 2024 && date.month === 0}
           />
 
           <Button
-            size='sm'
+            size='md'
             color='secondary'
             onClick={handleMonth}
             name='today'
@@ -37,15 +42,16 @@ export const Calendar = () => {
             Hoy
           </Button>
 
-          <Button
-            size='sm'
+          {<Button
+            size='md'
             color='secondary'
             onClick={handleMonth}
             name='more'
             variant='light'
             isIconOnly
             startContent={<span>{'>'}</span>}
-          />
+            disabled={date.year === currentYear && date.month === currentMonth}
+          />}
 
         </div>
       </div>
@@ -63,7 +69,6 @@ export const Calendar = () => {
         {/* Reccorres todos los días del mes  */}
         {Array.from({ length: date.daysAtMoth }, (_, i) => {
           // Extraer todas las propiedades, horario y clases de cada día
-
           const dayOfMonth = i + 1
           const dayOfWeek = determinateDay(dayOfMonth, date.startDay)
           const ocupedHours = classes.hoursOfClassesByDay[String(dayOfMonth)]
@@ -78,6 +83,15 @@ export const Calendar = () => {
 
             return isTheDay && hourIsNotOccuped
           })
+
+          // Mostrar únicamente los días programados y hoy
+          let dateItsInRange = true
+
+          if (date.month === currentMonth && date.year === currentYear) {
+            dateItsInRange = date.day >= dayOfMonth
+          } else if (date.month === 0 && date.year === 2024) {
+            dateItsInRange = dayOfMonth >= 9
+          }
 
           return <DayWithClasses key={i} dayOfMonth={dayOfMonth} currentDay={date.day}>
 
@@ -98,14 +112,14 @@ export const Calendar = () => {
             />
 
             {/* Mostrar el boton que activa el modal de clases en Mobile */}
-            <MobileClassButtons
+            {dateItsInRange && <MobileClassButtons
               dayOfMonth={dayOfMonth}
               handleClick={handleClick}
               scheduleByDay={scheduleByDay}
               classesByDay={classesByDay}
               userRole={userRole}
               userId={userId}
-            />
+            />}
 
             {/* Cada vez que quiere editar una clase */}
             {modals.isOpnenEditableModals[dayOfMonth] && <EditableModal

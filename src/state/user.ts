@@ -1,5 +1,5 @@
 import { type StateCreator, create } from 'zustand'
-import { devtools } from 'zustand/middleware'
+import { devtools, persist } from 'zustand/middleware'
 import { type Sale } from '.'
 
 // **********************************TYPES************************************ //
@@ -54,5 +54,5 @@ const UserStateApi: StateCreator<User & Actions> = (set, get) => ({
 })
 
 export const useUserState = create<User & Actions>()(
-  devtools(UserStateApi)
+  persist(devtools(UserStateApi), { name: 'user' })
 )
