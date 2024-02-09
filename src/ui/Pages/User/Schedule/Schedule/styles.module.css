@@ -4,9 +4,9 @@
   grid-template-columns: repeat(7, 1fr);
   grid-gap: 1rem;
   justify-items: center;
-  margin-right: 1rem;
   width: 100%;
   margin: 0 auto;
+  width: fit-content;
 }
 
 .class {
@@ -21,12 +21,12 @@
 .day {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 3rem;
   justify-content: space-between;
 }
 
 .classContainer {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem
+  gap: 1.5rem
 }

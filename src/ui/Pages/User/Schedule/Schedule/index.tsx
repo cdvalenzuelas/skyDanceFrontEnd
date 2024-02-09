@@ -38,7 +38,14 @@ export const Schedule = () => {
           <div className={styles.classContainer}>
             {schedule.map(item => {
               if (item.day === i) {
-                return <Card key={item.id} className={styles.class} style={{ backgroundColor: `var(--${item.gender}-color)` }}>
+                return <Card
+                  key={item.id}
+                  className={styles.class}
+                  style={{
+                    boxShadow: `-5px 0 0 var(--${item.gender}-color)`,
+                    border: `2px solid var(--${item.gender}-color)`
+                  }}
+                >
 
                   <User
                     name={item.teacher.name}
