@@ -2,7 +2,7 @@
 
 // Lib
 import { type MouseEvent } from 'react'
-import { Link as Link2, Button, Avatar } from '@nextui-org/react'
+import { Link as Link2, Button, Avatar, Badge } from '@nextui-org/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -85,18 +85,24 @@ export const Header = () => {
           className={pathName !== '/user' ? 'mobileHide' : ''}
         />
 
-        <Button
-          startContent={<PacksIcon color={userStage === 'packs' ? '#009cd3' : '#94a3b8'} />}
-          size='md'
-          radius='none'
-          color='secondary'
-          variant='light'
-          onClick={handleClick}
-          name='packs'
-          isIconOnly
-          style={{ borderBottom: userStage === 'packs' ? '2px solid #009cd3' : 'none' }}
-          className={pathName !== '/user' ? 'mobileHide' : ''}
-        />
+        <Badge
+          content='sale'
+          color='danger'
+          size='sm'
+        >
+          <Button
+            startContent={<PacksIcon color={userStage === 'packs' ? '#009cd3' : '#94a3b8'} />}
+            size='md'
+            radius='none'
+            color='secondary'
+            variant='light'
+            onClick={handleClick}
+            name='packs'
+            isIconOnly
+            style={{ borderBottom: userStage === 'packs' ? '2px solid #009cd3' : 'none' }}
+            className={pathName !== '/user' ? 'mobileHide' : ''}
+          />
+        </Badge>
 
         {(role === 'admin' || role === 'superAdmin') && <Button
           size='md'

@@ -20,15 +20,15 @@ export const LogIn = () => {
       <div className={`${style.container}`}>
         <Card className={`${style.card}`}>
 
-          <CardHeader className='mb-5'>
+          <CardHeader className='mb-5 flex items-center gap-5'>
             <img src='/logo.png' alt='imagen' width={'50px'} />
-            <h2>SKY DANCE</h2>
+            <h1>SKY DANCE</h1>
           </CardHeader>
 
           <Divider />
 
           <CardBody className='py-5 flex flex-col. gap-5'>
-            <h1>Registrate de forma gratuita</h1>
+            <h2>Registrate de forma gratuita</h2>
 
             <Button
               onClick={handleSignIn}

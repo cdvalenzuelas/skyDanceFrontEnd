@@ -19,31 +19,31 @@
   color: var(--gray2);
 
   /* Salsa: Rojo Pasión con opacidad */
-  --salsa-color: rgba(255, 0, 0, 0.3);
+  --salsa-color: rgba(255, 0, 0);
 
   /* Bachata: Azul Celeste con opacidad */
-  --bachata-color: rgba(135, 206, 235, 0.3);
+  --bachata-color: rgba(135, 206, 235);
 
   /* Afro: Amarillo Sol con opacidad */
-  --afro-color: rgba(255, 215, 0, 0.3);
+  --afro-color: rgba(255, 215, 0);
 
   /* Reggaetón: Negro Urbano con opacidad */
-  --reggaeton-color: rgba(0, 0, 0, 0.3);
+  --reggaeton-color: rgba(0, 0, 0);
 
   /* Dancehall: Verde Neón con opacidad */
-  --dancehall-color: rgba(57, 255, 20, 0.3);
+  --dancehall-color: rgba(57, 255, 20);
 
   /* Sexy Style: Rosa Caliente con opacidad */
-  --sexy-style-color: rgba(255, 105, 180, 0.3);
+  --sexy-style-color: rgba(255, 105, 180);
 
   /* Twerk: Morado Eléctrico con opacidad */
-  --twerk-color: rgba(128, 0, 128, 0.3);
+  --twerk-color: rgba(128, 0, 128);
 
   /* Urbano: Gris Grafito con opacidad */
-  --urbano-color: rgba(112, 128, 144, 0.3);
+  --urbano-color: rgba(112, 128, 144);
 
   /* Latino: Naranja Tropical con opacidad */
-  --latino-color: rgba(255, 140, 0, 0.3);
+  --latino-color: rgba(255, 140, 0);
 }
 
 *,
