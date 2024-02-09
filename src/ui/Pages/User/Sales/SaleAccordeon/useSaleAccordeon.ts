@@ -10,9 +10,6 @@ export const useSaleAccordeon = () => {
   const [moneyByPeriod, setMoneyByPeriod] = useState<Record<string, number>>({})
   const [isOpenModals, setIsOpenModals] = useState<Record<string, boolean>>({})
 
-  const currentDate = new Date()
-  const currentPeriod = `${months[currentDate.getMonth()]} de ${currentDate.getFullYear()}`
-
   useEffect(() => {
     (async () => {
       const salesFromDB = await getSalesFromDB()
@@ -61,5 +58,5 @@ export const useSaleAccordeon = () => {
     setIsOpenModals(newIsOpenModals)
   }
 
-  return { moneyByPeriod, currentPeriod, salesByPeriod, users, isOpenModals, handleclick }
+  return { moneyByPeriod, salesByPeriod, users, isOpenModals, handleclick }
 }

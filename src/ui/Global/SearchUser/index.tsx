@@ -8,9 +8,10 @@ import { userColor } from '@/utils/users'
 interface Props {
   getUserId?: (userIds: string | null) => void
   getSelectedUser?: (user: User | null) => void
+  showAllUsers?: boolean
 }
 
-export const SearchUser: FC<Props> = ({ getSelectedUser, getUserId }) => {
+export const SearchUser: FC<Props> = ({ getSelectedUser, getUserId, showAllUsers = false }) => {
   const users = useUsersState(state => state.users)
   const [search, setSearch] = useState<string>('')
   const [searchResults, setSearchResults] = useState<User[]>([])
@@ -84,7 +85,9 @@ export const SearchUser: FC<Props> = ({ getSelectedUser, getUserId }) => {
         size='sm'
         className='h-12 flex items-center justify-between'
         color={userColor(user)}
-        isDisabled={user.active_plan?.active === true || user.role !== 'user'}
+        isDisabled={showAllUsers
+          ? false
+          : user.active_plan?.active === true || user.role !== 'user'}
         onClick={handleUser}>
         {user.name}
       </Button>)}

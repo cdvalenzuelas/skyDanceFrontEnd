@@ -1,0 +1,20 @@
+.container {
+  padding: 2rem;
+  display: flex;
+  gap: 1rem;
+  margin-right: 2rem;
+}
+
+.card {
+  min-width: 25rem;
+  padding: 2.5rem;
+}
+
+.price {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.month {
+  font-size: 0.8rem;
+}

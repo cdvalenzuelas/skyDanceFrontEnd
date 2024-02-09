@@ -22,6 +22,7 @@ export const ButtonSale: FC<Props> = ({ sale, user, value, handleclick, isOpenMo
         color={userColor(user)}
         src={user.image}
         size='sm'
+        className='flex-shrink-0'
       />}
 
       endContent={<div className='flex gap-2'>
@@ -32,7 +33,7 @@ export const ButtonSale: FC<Props> = ({ sale, user, value, handleclick, isOpenMo
       onClick={handleclick}
       value={value}
       className='flex items-center justify-between gap-5 h-14'
-      color={userColor(user)}
+      color={sale.name === 'cortesia' ? 'warning' : userColor(user)}
       variant='flat'
       radius='full'
     >

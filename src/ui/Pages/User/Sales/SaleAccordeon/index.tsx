@@ -3,11 +3,17 @@ import { ButtonSale } from '../SaleButton'
 import styles from '../styles.module.css'
 
 import { useSaleAccordeon } from './useSaleAccordeon'
+import { type FC } from 'react'
 
-export const SaleAccordeon = () => {
-  const { currentPeriod, moneyByPeriod, salesByPeriod, users, isOpenModals, handleclick } = useSaleAccordeon()
+interface Props {
+  filters: string[]
+  selectedUserId: string | null
+}
 
-  return <Accordion defaultExpandedKeys={[currentPeriod]} className={styles.accordion}>
+export const SaleAccordeon: FC<Props> = ({ filters, selectedUserId }) => {
+  const { moneyByPeriod, salesByPeriod, users, isOpenModals, handleclick } = useSaleAccordeon()
+
+  return <Accordion defaultExpandedKeys={[]} className={styles.accordion}>
     {Object.keys(salesByPeriod).map(period => (
 
       <AccordionItem title={period} key={period} subtitle={<Chip color='primary'>$ {moneyByPeriod[period]}</Chip>}
@@ -17,10 +23,13 @@ export const SaleAccordeon = () => {
           {salesByPeriod[period].map(sale => {
             const user = users.filter(user => user.id === sale.user_id)[0]
             const saleId = sale.id as string
+            const status = sale.name === 'cortesia'
+              ? 'cortesia'
+              : sale.active ? 'vigente' : 'vencido'
 
-            return sale.name === 'cortesia'
-              ? null
-              : <ButtonSale key={sale.id} user={user} sale={sale} value={saleId} handleclick={handleclick} isOpenModals={isOpenModals} />
+            return filters.includes(status) && (selectedUserId === null || selectedUserId === sale.user_id)
+              ? <ButtonSale key={sale.id} user={user} sale={sale} value={saleId} handleclick={handleclick} isOpenModals={isOpenModals} />
+              : null
           })}
         </div>
 
