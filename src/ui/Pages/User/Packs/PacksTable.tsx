@@ -1,31 +1,15 @@
 // Lib
 import { useEffect, useState } from 'react'
-import { Card, CardHeader, CardBody, Divider, CardFooter, Button, Chip, Image } from '@nextui-org/react'
+import { Card, CardHeader, CardBody, Divider, CardFooter, Button, Chip } from '@nextui-org/react'
 // Componets
-import { type PackPeriod, usePacksState, type Pack } from '@state'
+import { usePacksState, type Pack } from '@state'
 import { getPacks } from '@api'
 import styles from './style.module.css'
-
-const preiods: Record<PackPeriod, string> = {
-  day: 'Día',
-  month: 'Mes',
-  week: 'Semana',
-  year: 'Año'
-} as const
-
-const plural = (duration: number, period: string) => {
-  if (duration > 1) {
-    const newPeriod = period[period.length - 1] === 's' ? period + 'es' : period + 's'
-    return newPeriod
-  }
-
-  return period
-}
 
 export const PacksTable = () => {
   const [monthPacks, setMonthPacks] = useState<Pack[]>([])
   const setPacks = usePacksState(state => state.setPacks)
-  const packs = usePacksState(state => state.packs)
+  // const packs = usePacksState(state => state.packs)
 
   useEffect(() => {
     (async () => {
