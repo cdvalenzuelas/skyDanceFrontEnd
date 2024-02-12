@@ -24,7 +24,7 @@ export const MobileClassButtons: FC<Props> = ({ dayOfMonth, scheduleByDay, handl
       return true
     }
 
-    const usersIds = item.users.map(item2 => item.id)
+    const usersIds = item.users.map(item2 => item2.id)
     if (usersIds.includes(userId)) {
       return true
     }

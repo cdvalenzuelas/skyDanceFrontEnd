@@ -100,15 +100,15 @@ export const SearchUsers: FC<Props> = ({ teacher, usersOfClass, getSelectedUsers
         key={user.id}
         name='add'
         value={user.id}
-        startContent={<Avatar src={user.image} size='sm' color={userColor(user)} isBordered />}
+        startContent={<Avatar src={user.image} size='sm' color={userColor(user)} isBordered className='flex-shrink-0' />}
         endContent={<UserChip user={user}></UserChip>}
         variant='flat'
         size='sm'
-        className='h-12 flex items-center justify-between px-5'
+        className='h-12 flex items-center justify-between px-5 gap-3'
         color={(user.active_plan === null && user.role === 'user') ? 'danger' : userColor(user)}
-        isDisabled={user.active_plan?.active === false || (user.active_plan === null && user.role === 'user')}
+        isDisabled={user.role === 'user' && (user.active_plan === null || !user.active_plan?.active)}
         onClick={handleUser}>
-        {user.name}
+        <span className='flex-grow flex justify-start overflow-hidden whitespace-nowrap'>{user.name}</span>
       </Button>)}
     </Card>}
 

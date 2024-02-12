@@ -51,7 +51,7 @@ export const Info = () => {
         </Chip>
 
         {/* Si el usuario es nuevo hacerle una promoción */}
-        {user.active_plan === null && <Textarea
+        {(user.active_plan === null || user.active_plan.name === 'cortesia') && user.role === 'user' && <Textarea
           isReadOnly
           color='warning'
           type="text"
@@ -67,17 +67,23 @@ export const Info = () => {
           {/* SI EL PLAN ES ACTIVO */}
           <div className='flex justify-between w-full gap-5'>
 
-            Clases: {user.active_plan?.taken_classes} / {user.active_plan?.classes === -1 ? '∞' : user.active_plan.classes}
+            {(daysBetweenTwoDates >= 0 && user.active_plan?.classes > user.active_plan?.taken_classes) && <>
+              Clases: {user.active_plan?.taken_classes} / {user.active_plan?.classes === -1 ? '∞' : user.active_plan.classes}
+            </>}
 
-            {user.active_plan?.classes !== -1 &&
+            {user.active_plan?.classes !== -1 && (daysBetweenTwoDates >= 0 && user.active_plan?.classes > user.active_plan?.taken_classes) &&
               <Chip size='sm'
-                color={user.active_plan.taken_classes < user.active_plan.classes
-                  ? 'success'
+                color={daysBetweenTwoDates >= 0
+                  ? user.active_plan.taken_classes < user.active_plan.classes ? 'success' : 'danger'
                   : 'danger'}
               >
-                {user.active_plan.taken_classes < user.active_plan.classes
-                  ? `Te quedan ${user.active_plan.classes - user.active_plan.taken_classes} clases`
-                  : 'Acabaste tus Clases'}
+                {daysBetweenTwoDates >= 0
+                  ? user.active_plan.taken_classes < user.active_plan.classes
+                    ? `Te quedan ${user.active_plan.classes - user.active_plan.taken_classes} clases`
+                    : 'Acabaste tus Clases'
+                  : user.active_plan.taken_classes < user.active_plan.classes
+                    ? `Te sobraron ${user.active_plan.classes - user.active_plan.taken_classes} clases`
+                    : 'Acabaste tus Clases'}
               </Chip>
             }
 
@@ -97,7 +103,7 @@ export const Info = () => {
             >
               {daysBetweenTwoDates === 0
                 ? 'Tu plan se vence hoy'
-                : daysBetweenTwoDates > 0 ? `Te quedan ${daysBetweenTwoDates} días` : `Tu plan se vención hace ${daysBetweenTwoDates} días`}
+                : daysBetweenTwoDates > 0 ? `Te quedan ${daysBetweenTwoDates} días` : `Tu plan venció hace ${daysBetweenTwoDates * -1} días`}
             </Chip>
           </div>
 

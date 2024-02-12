@@ -79,7 +79,7 @@ export const SaleModal: FC<Props> = ({ user, sale, handleclick }) => {
             >
               {daysBetweenTwoDates === 0
                 ? 'Se vence hoy'
-                : daysBetweenTwoDates > 0 ? `Quedan ${daysBetweenTwoDates} días` : `Tu plan se vención hace ${daysBetweenTwoDates} días`}
+                : daysBetweenTwoDates > 0 ? `Quedan ${daysBetweenTwoDates} días` : `Tu plan se venció hace ${daysBetweenTwoDates * -1} días`}
             </Chip>
           </div>
 

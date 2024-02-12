@@ -35,7 +35,7 @@ export const Form: FC<Props> = ({ danceClass, setInternalDanceClass, setIsOpenEd
 
     <Button
       style={{ display: arrowState ? 'none' : 'initial' }}
-      className='w-full'
+      className='w-full flex-shrink-0'
       color='primary'
       size='md'
       variant='light'
@@ -53,7 +53,7 @@ export const Form: FC<Props> = ({ danceClass, setInternalDanceClass, setIsOpenEd
       variant='light'
       name='preview'
       onClick={handleSubmit}
-      className={styles.preview}
+      className={`flex-shrink-0 ${styles.preview}`}
       startContent={<FontAwesomeIcon icon={faChevronDown} style={{ transform: arrowState ? 'rotate(180deg)' : 'none' }} />}
     />
 

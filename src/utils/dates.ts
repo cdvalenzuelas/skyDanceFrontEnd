@@ -2,7 +2,7 @@ export const getDaysBetweenTwoDates = (date1: Date, date2: Date): number => {
   const MILISEGUNDOS_POR_DIA = 1000 * 60 * 60 * 24
 
   // Calcular la diferencia en milisegundos
-  const diferenciaMilisegundos = Math.abs(date1.getTime() - date2.getTime())
+  const diferenciaMilisegundos = date1.getTime() - date2.getTime()
 
   // Convertir la diferencia a días
   const dias = diferenciaMilisegundos / MILISEGUNDOS_POR_DIA

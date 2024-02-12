@@ -78,18 +78,18 @@ export const SearchUser: FC<Props> = ({ getSelectedUser, getUserId, showAllUsers
         key={user.id}
         name='add'
         value={user.id}
-        startContent={<Avatar src={user.image} size='sm' isBordered color={userColor(user)} />}
+        startContent={<Avatar src={user.image} size='sm' isBordered color={userColor(user)} className='flex-shrink-0' />}
         endContent={<UserChip user={user} />}
 
         variant='flat'
         size='sm'
-        className='h-12 flex items-center justify-between'
+        className='h-12 flex items-center justify-between gap-3'
         color={userColor(user)}
         isDisabled={showAllUsers
           ? false
           : user.active_plan?.active === true || user.role !== 'user'}
         onClick={handleUser}>
-        {user.name}
+        <span className='flex-grow flex justify-start overflow-hidden whitespace-nowrap'>{user.name}</span>
       </Button>)}
     </Card>}
 

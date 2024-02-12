@@ -33,10 +33,10 @@ export const useSaleAccordeon = () => {
 
         if (period in newSalesByPeriod) {
           newSalesByPeriod[period] = [...newSalesByPeriod[period], newItem]
-          newMoneyByPeriod[period] = newMoneyByPeriod[period] + newItem.price
+          newMoneyByPeriod[period] = newMoneyByPeriod[period] + newItem.total_price
         } else {
           newSalesByPeriod[period] = [newItem]
-          newMoneyByPeriod[period] = newItem.price
+          newMoneyByPeriod[period] = newItem.total_price
         }
 
         newSales.push(newItem)
