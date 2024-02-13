@@ -9,11 +9,9 @@ export const userColor = (user: User) => {
     return 'secondary'
   }
 
-  if (user.active_plan?.name === 'cortesia' && user.active_plan.taken_classes === 0) {
+  if (user.active_plan?.name === 'cortesia' || user.active_plan === null) {
     return 'warning'
   }
 
-  return user.active_plan === null
-    ? 'warning'
-    : user.active_plan.active ? 'success' : 'danger'
+  return user.active_plan.active ? 'success' : 'danger'
 }

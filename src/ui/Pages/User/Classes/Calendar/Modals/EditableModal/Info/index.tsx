@@ -1,5 +1,5 @@
 // Libs
-import { Avatar, AvatarGroup, Chip, User, Link, Image, Card, CardHeader, CardFooter } from '@nextui-org/react'
+import { Avatar, AvatarGroup, Chip, User, Link, Image, Card, CardHeader, CardFooter, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react'
 import { type FC } from 'react'
 
 // Componets
@@ -81,13 +81,22 @@ export const Info: FC<Props> = ({ danceClass, dayOfMonth, month, year, editable 
 
         <AvatarGroup
           color='primary'
+          isGrid
           size='sm'
-          className='flex justify-start'>
-          {virtualUser.map(item => <Avatar
-            key={item.id}
-            src={item.image}
-            color={userColor(item)}
-            isBordered />)}
+          max={40}
+          className='flex justify-start flex-wrap w-full'>
+          {virtualUser.map(item => <Popover key={item.id} color='success' backdrop='blur'>
+            <PopoverTrigger>
+              <Avatar
+                key={item.id}
+                src={item.image}
+                color={userColor(item)}
+                isBordered />
+            </PopoverTrigger>
+            <PopoverContent>
+              {item.name}
+            </PopoverContent>
+          </Popover>)}
         </AvatarGroup>
       </div>
     </CardFooter>

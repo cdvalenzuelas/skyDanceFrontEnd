@@ -13,6 +13,8 @@ interface Props {
 }
 
 export const ReadableModal: FC<Props> = ({ dayOfMonth, month, year, handleClick, danceClass }) => {
+  console.log(danceClass)
+
   return <Modal isOpen={true} backdrop='blur' className={styles.readableModal} placement='center'>
     <ModalContent >
 
