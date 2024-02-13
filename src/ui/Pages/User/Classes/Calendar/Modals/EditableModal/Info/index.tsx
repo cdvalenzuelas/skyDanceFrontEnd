@@ -82,7 +82,7 @@ export const Info: FC<Props> = ({ danceClass, dayOfMonth, month, year, editable 
         <AvatarGroup
           color='primary'
           size='sm'
-          max={5}
+          max={12}
           className='flex justify-start'>
           {virtualUser.map(item => <Avatar
             key={item.id}
