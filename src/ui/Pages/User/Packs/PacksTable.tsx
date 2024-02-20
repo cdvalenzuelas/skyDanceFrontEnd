@@ -4,6 +4,7 @@ import { Card, CardHeader, CardBody, Divider, Chip } from '@nextui-org/react'
 // Componets
 import { usePacksState, type Pack } from '@state'
 import styles from './style.module.css'
+import { formatCurency } from '@/utils/currency'
 
 export const PacksTable = () => {
   const packs = usePacksState(state => state.packs)
@@ -48,7 +49,7 @@ export const PacksTable = () => {
 
           <div className='flex items-center justify-between w-full'>
             <span className={styles.price} style={{ color: 'var(--blue2)' }}>
-              $ {pack.price}<span className={styles.month}> / Mes</span>
+              $ {formatCurency(pack.price)}<span className={styles.month}> / Mes</span>
             </span>
             <span style={{ color: 'var(--success)', fontWeight: 'bold' }}>{pack.classes} Clases</span>
           </div>
@@ -90,8 +91,16 @@ export const PacksTable = () => {
 
           <div className='flex items-center justify-between w-full'>
             <span className={styles.price} style={{ color: 'white' }}>
-              $ {pack.price}<span className={styles.month}> / Mes</span>
+              $ {formatCurency(pack.price)}
             </span>
+            {pack.duration !== 1 && <Chip
+              size='sm'
+              color='success'
+              variant='solid'
+              style={{ color: 'white', fontWeight: 'bold' }}
+            >
+              $ {formatCurency(Math.round(pack.price / pack.duration))} / Mes
+            </Chip>}
           </div>
 
         </div>)}

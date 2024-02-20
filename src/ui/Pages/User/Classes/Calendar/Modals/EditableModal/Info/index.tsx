@@ -42,7 +42,7 @@ export const Info: FC<Props> = ({ danceClass, dayOfMonth, month, year, editable 
   virtualUser.sort((a, b) => a.order - b.order)
 
   return (<Card className={styles.info}>
-    <CardHeader className="absolute z-10 top-1 flex flex-col items-start px-5">
+    <CardHeader className="absolute z-10 top-1 flex flex-col items-start px-5 gap-2">
       <User
         name={danceClass.teacher.name}
         className='py-2'
@@ -54,7 +54,9 @@ export const Info: FC<Props> = ({ danceClass, dayOfMonth, month, year, editable 
         )}
         avatarProps={{
           src: danceClass.teacher.image,
-          size: 'lg'
+          size: 'md',
+          isBordered: true,
+          color: 'secondary'
         }}
       />
 
@@ -105,7 +107,7 @@ export const Info: FC<Props> = ({ danceClass, dayOfMonth, month, year, editable 
       removeWrapper
       alt="Card background"
       className="z-0 w-full h-full object-cover"
-      src="/home/salsa.jpg"
+      src={`teachers/${danceClass.teacher.instagram_id}.jpg`}
     />
   </Card>)
 }

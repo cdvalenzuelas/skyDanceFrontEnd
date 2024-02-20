@@ -15,7 +15,7 @@ export const getClasses = async (year: number, month: number): Promise<DanceClas
     // hace la query
     const { data, error } = await supabase
       .from('classes')
-      .select('id, gender, mode, style, hour, teacher, users, date, difficulty, canceled, done')
+      .select('id, gender, mode, style, hour, teacher, users, date, difficulty, canceled, done, price')
       .gte('date', `${year}-${month + 1}-01`) // Mayor o igual que el 1 de enero de 2024
       .lt('date', `${nextYear}-${nextMonth}-01`)
 

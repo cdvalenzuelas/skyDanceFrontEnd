@@ -6,6 +6,7 @@ import type { Dispatch, FC, MouseEvent, SetStateAction } from 'react'
 import { useNewSaleModal } from './useNewSaleModal'
 import { SearchUser } from '@/ui/Global/SearchUser'
 import { paymentModes, duaration } from '../utils'
+import { formatCurency } from '@/utils/currency'
 
 interface Props {
   isOpen: boolean
@@ -106,7 +107,7 @@ export const NewSaleModal: FC<Props> = ({ isOpen, handleOpen, setIsOpen }) => {
             {promotion !== '' && <Input
               isReadOnly
               color='danger'
-              value={`$ ${internalSale.price}`}
+              value={`$ ${formatCurency(internalSale.price)}`}
               autoComplete='off'
               type="text"
               label="Precio normal"
@@ -117,7 +118,7 @@ export const NewSaleModal: FC<Props> = ({ isOpen, handleOpen, setIsOpen }) => {
               autoComplete='off'
               isReadOnly
               color='success'
-              value={`$ ${internalSale.total_price}`}
+              value={`$ ${formatCurency(internalSale.total_price)}`}
               type="text"
               label="Total a Pagar"
               size='sm'

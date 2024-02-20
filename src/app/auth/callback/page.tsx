@@ -8,6 +8,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 // Componest | State | types
 import { getUserById, createNewUser } from '@api'
 import { type User, useUserState } from '@state'
+import { updateActivePlanStatus } from '@/api/updateActivePlanStatus'
 
 export default function Page() {
   const setUser = useUserState(state => state.setUser)
@@ -19,16 +20,26 @@ export default function Page() {
     // VER SI ESTÁ REGISTRADO EN LA PAGINA
     const user = await getUserById(id)
 
+    const newdate = new Date()
+
+    if (user[0].active_plan !== null) {
+      if (user[0].active_plan?.active && user[0].active_plan.end_date > newdate) {
+        user[0].active_plan.active = false
+
+        updateActivePlanStatus([user[0].active_plan.id as string])
+      }
+    }
+
     setUser(user[0])
 
     // Si el usuario existe llevarlo a la pagina de inicio, de lo contrario crear un usuario
     if (user.length > 0) {
-      router.push('/user')
+      router.replace('/user')
     } else {
       const newUser = await createNewUser(scheletonUser)
 
       setUser(newUser[0])
-      router.push('/user')
+      router.replace('/user')
       // Mandarlo a registrar
       // router.push('/signin')
     }

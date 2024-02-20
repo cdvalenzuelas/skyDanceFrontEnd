@@ -4,6 +4,7 @@ import styles from '../styles.module.css'
 
 import { useSaleAccordeon } from './useSaleAccordeon'
 import { type FC } from 'react'
+import { formatCurency } from '@/utils/currency'
 
 interface Props {
   filters: string[]
@@ -16,7 +17,7 @@ export const SaleAccordeon: FC<Props> = ({ filters, selectedUserId }) => {
   return <Accordion defaultExpandedKeys={[]} className={styles.accordion}>
     {Object.keys(salesByPeriod).map(period => (
 
-      <AccordionItem title={period} key={period} subtitle={<Chip color='primary'>$ {moneyByPeriod[period]}</Chip>}
+      <AccordionItem title={period} key={period} subtitle={<Chip color='primary'>$ {formatCurency(moneyByPeriod[period])}</Chip>}
       >
 
         <div className='flex flex-col gap-3'>
