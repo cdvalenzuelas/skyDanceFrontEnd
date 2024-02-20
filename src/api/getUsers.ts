@@ -1,6 +1,7 @@
 import type { User, SaleFromDb, UserFromDB, Sale } from '@state'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { populate, createDateFromString } from '.'
+import { updateActivePlanStatus } from './updateActivePlanStatus'
 
 const supabase = createClientComponentClient()
 
@@ -38,6 +39,10 @@ export const getUsers = async (): Promise<User[]> => {
     }
 
     const newUsers: User[] = []
+    const expiredPacks: string[] = []
+
+    const currentDate = new Date()
+    const currentDate2 = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())
 
     // Vamos a rellenar los active_plan status
     users.forEach(({ id, image, active_plan: internalActivePlan, role, name, instagram_id: instagramId, mail, phone }) => {
@@ -46,11 +51,18 @@ export const getUsers = async (): Promise<User[]> => {
       if (internalActivePlan !== null) {
         const activePlan1 = minimalActivePlans.filter(item => item.id === internalActivePlan)[0]
 
+        const endDate = createDateFromString(activePlan1.end_date)
+
+        if (endDate < currentDate2 && activePlan1.active) {
+          expiredPacks.push(activePlan1.id as string)
+        }
+
         activePlan = {
           ...activePlan1,
           sale_date: createDateFromString(activePlan1.sale_date),
           start_date: createDateFromString(activePlan1.start_date),
-          end_date: createDateFromString(activePlan1.end_date)
+          end_date: endDate,
+          active: endDate >= currentDate2
         }
       }
 
@@ -66,6 +78,8 @@ export const getUsers = async (): Promise<User[]> => {
         phone
       })
     })
+
+    updateActivePlanStatus(expiredPacks)
 
     return newUsers
   } catch (error) {

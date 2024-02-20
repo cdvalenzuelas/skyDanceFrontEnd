@@ -1,7 +1,7 @@
 // Components
 import { useScheduleState } from '@state'
 import styles from './styles.module.css'
-import { Button, Card, Chip, Divider, Link, User } from '@nextui-org/react'
+import { Avatar, Button, Card, Chip, Image } from '@nextui-org/react'
 import { useEffect, useState } from 'react'
 
 const days = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sábado']
@@ -41,41 +41,34 @@ export const Schedule = () => {
                 return <Card
                   key={item.id}
                   className={styles.class}
-                  style={{
-                    boxShadow: `-5px 0 0 var(--${item.gender}-color)`,
-                    border: `2px solid var(--${item.gender}-color)`
-                  }}
                 >
 
-                  <User
-                    name={item.teacher.name}
-                    className='py-2'
-                    description={(
-                      <Link href={`https://www.instagram.com/${item.teacher.instagram_id}/`} size="sm" isExternal>
-                        @{item.teacher.instagram_id}
-                      </Link>
-                    )}
-                    avatarProps={{
-                      src: item.teacher.image,
-                      size: 'sm'
-                    }}
-                  />
+                  <div className={styles.cover}>
+                    <Image
+                      src={`teachers/${item.teacher.instagram_id}.jpg`}
+                      style={{ borderRadius: '0' }}
+                      className={styles.img}
+                    />
+                  </div>
 
-                  <Divider />
+                  <div className={styles.avatar}>
+                    <Avatar
+                      size='lg'
+                      src={item.teacher.image}
+                      isBordered
+                      color='secondary'
+                    />
+                  </div>
 
-                  <Chip
-                    size='sm'
-                    color='primary'>
-                    {item.hour}:00 a {item.hour + 1}:00
-                  </Chip>
+                  <div className={styles.teacherInfo}>
+                    <span>{item.teacher.name}</span>
+                    <a>{item.teacher.instagram_id}</a>
+                  </div>
 
-                  <div className='flex gap-1'>
-
-                    <Chip size='sm' color='danger'>{item.gender}</Chip>
-                    <Chip size='sm' color='warning'>{item.difficulty}</Chip>
-                    <Chip size='sm' color='success'>{item.mode}</Chip>
-                    {!["''", ''].includes(item.style) && <Chip color='primary' size='sm'>{item.style}</Chip>}
-
+                  <div className={styles.info}>
+                    <span>{item.gender} {item.mode === 'couple' ? 'parejas' : ''} {item.style}</span>
+                    <span className={styles.hour}>{item.hour}:00 a {item.hour + 1}:00</span>
+                    <Chip size='sm' color={item.difficulty === 'basico' ? 'success' : 'warning'}>{item.difficulty}</Chip>
                   </div>
 
                 </Card>
@@ -90,5 +83,5 @@ export const Schedule = () => {
         return null
       }
     })}
-  </div>)
+  </div >)
 }

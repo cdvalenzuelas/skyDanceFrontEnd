@@ -17,6 +17,7 @@
   --warning: #f5a524;
   --success: #17c964;
   color: var(--gray2);
+  --gradient1: linear-gradient(to bottom right, var(--blue1), var(--blue2));
 
   /* Salsa: Rojo Pasión con opacidad */
   --salsa-color: rgba(255, 0, 0);
