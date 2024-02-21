@@ -41,7 +41,7 @@ export const ButtonSale: FC<Props> = ({ sale, user, value, handleclick, isOpenMo
       <span className='flex-grow flex justify-start overflow-hidden whitespace-nowrap'>{user.name}</span>
     </Button>
 
-    {isOpenModals[sale.id as string] && <SaleModal user={user} sale={sale} handleclick={handleclick} />}
+    {isOpenModals[sale.id as string] && <SaleModal user={user} sale={sale} handleclick={handleclick} status={status} />}
 
   </>
 }

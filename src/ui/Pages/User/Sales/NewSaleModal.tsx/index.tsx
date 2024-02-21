@@ -1,5 +1,5 @@
 // Libs
-import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Select, SelectItem, Input, Divider, Textarea, Chip } from '@nextui-org/react'
+import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Select, SelectItem, Input, Divider, Textarea, Chip, Avatar, Card, CardBody } from '@nextui-org/react'
 import type { Dispatch, FC, MouseEvent, SetStateAction } from 'react'
 
 // Components
@@ -7,6 +7,8 @@ import { useNewSaleModal } from './useNewSaleModal'
 import { SearchUser } from '@/ui/Global/SearchUser'
 import { paymentModes, duaration } from '../utils'
 import { formatCurency } from '@/utils/currency'
+import { userColor } from '@/utils/users'
+import styles from './styles.module.css'
 
 interface Props {
   isOpen: boolean
@@ -16,14 +18,17 @@ interface Props {
 
 export const NewSaleModal: FC<Props> = ({ isOpen, handleOpen, setIsOpen }) => {
   const {
-    handles: { handSelect, handleSubmit },
+    handles: { handSelect, handleSubmit, handleChange },
     packs,
     startDateMessage,
     internalSale,
     pack,
     getUser,
     promotion,
-    courtesPackId
+    courtesPackId,
+    user,
+    referralCode,
+    referralUser
   } = useNewSaleModal({ setIsOpen })
 
   return (<Modal placement='center' isOpen={isOpen} size='lg' backdrop='blur' className='px-5 py-3'>
@@ -75,7 +80,33 @@ export const NewSaleModal: FC<Props> = ({ isOpen, handleOpen, setIsOpen }) => {
           >
             {paymentModes.map(item => <SelectItem color='secondary' key={item} onClick={e => { handSelect(e, 'paymentMode') }}>{item}</SelectItem>)}
           </Select>
+
         </div>
+
+        {user !== null && (user.active_plan === null || user.active_plan.name === 'cortesia') && <div className={styles.referralContainer}>
+          {packs.length > 0 && <Input
+            label='Código de referidos'
+            placeholder={user.referral_code}
+            size='sm'
+            variant='bordered'
+            color='secondary'
+            onChange={handleChange}
+            className={styles.code}
+            value={referralCode}
+          />}
+
+          {referralUser !== null && <Card className={styles.referralUser}>
+            <CardBody className='flex flex-row items-center justify-between px-5 py-3'>
+              <Avatar
+                src={referralUser.image}
+                isBordered size='sm'
+                color={userColor(referralUser)}
+              />
+              <span>{referralUser.name}</span>
+            </CardBody>
+          </Card>}
+
+        </div>}
 
         <Divider />
 

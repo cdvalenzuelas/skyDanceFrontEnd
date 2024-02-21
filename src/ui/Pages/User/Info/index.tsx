@@ -1,4 +1,4 @@
-import { Card, CardBody, CardFooter, CardHeader, Chip, Divider, Textarea, User } from '@nextui-org/react'
+import { Card, CardBody, CardFooter, CardHeader, Chip, Divider, Snippet, Textarea, User } from '@nextui-org/react'
 import { useUserState, useUsersState } from '@state'
 import { getDaysBetweenTwoDates, formardate } from '@/utils/dates'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -10,6 +10,7 @@ export const Info = () => {
   // VIENE DEL ESTADO
   const userId = useUserState(state => state.id)
   const users = useUsersState(item => item.users)
+  const referralCode = useUserState(item => item.referral_code)
   const user = users.filter(item2 => item2.id === userId)[0]
 
   if (user === undefined) {
@@ -19,6 +20,8 @@ export const Info = () => {
   const daysBetweenTwoDates = user.active_plan !== null
     ? getDaysBetweenTwoDates(user.active_plan.end_date, new Date())
     : 0
+
+  console.log(user)
 
   return (<section className='flex flex-col gap-5 px-5 py-5 items-center justify-center h-full'>
     <Card style={{ padding: '2rem' }}>
@@ -36,6 +39,19 @@ export const Info = () => {
 
         <UserChip user={user} />
       </CardHeader>
+
+      <div className='flex flex-col gap-2 py-3 px-2'>
+
+        <span style={{ color: 'var(--blue1)' }}>Código de referidos</span>
+
+        <Snippet
+          hideSymbol
+          color='success'
+          size='md' className='flex items-center'>
+          {referralCode}
+        </Snippet>
+
+      </div>
 
       <Divider />
 

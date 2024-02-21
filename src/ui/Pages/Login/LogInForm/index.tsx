@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 // Libs
@@ -12,8 +13,6 @@ import logo from './google.png'
 export const LogIn = () => {
   const handleSignIn = async (e: MouseEvent) => {
     const user = logIn()
-    console.log(user)
-    console.clear()
   }
 
   return (

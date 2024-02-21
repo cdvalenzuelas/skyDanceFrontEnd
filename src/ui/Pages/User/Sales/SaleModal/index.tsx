@@ -9,12 +9,15 @@ interface Props {
   user: AppUser
   sale: Sale
   handleclick: (e: MouseEvent<HTMLButtonElement>) => void
+  status: 'vigente' | 'vencido' | 'cortesia'
 }
 
-export const SaleModal: FC<Props> = ({ user, sale, handleclick }) => {
+export const SaleModal: FC<Props> = ({ user, sale, handleclick, status }) => {
   const daysBetweenTwoDates = user.active_plan !== null
     ? getDaysBetweenTwoDates(user.active_plan.end_date, new Date())
     : 0
+
+  const classesWasCompleted = sale.classes === sale.taken_classes
 
   return <Modal className={styles.card} isOpen={true}>
 
@@ -35,7 +38,12 @@ export const SaleModal: FC<Props> = ({ user, sale, handleclick }) => {
 
         <div className='flex gap-2'>
           <Chip color='warning' size='sm'>{sale.name}</Chip>
-          <Chip color={sale.active ? 'success' : 'danger'} size='sm'>{sale.active ? 'vigente' : 'vencido'}</Chip>
+          <Chip
+            color={status === 'vigente'
+              ? 'success'
+              : status === 'vencido' ? 'danger' : 'warning'} size='sm'>
+            {status}
+          </Chip>
         </div>
 
       </ModalHeader>
@@ -53,12 +61,12 @@ export const SaleModal: FC<Props> = ({ user, sale, handleclick }) => {
               <Chip
                 size='sm'
                 variant='flat'
-                color={sale.taken_classes < sale.classes
+                color={status === 'vigente'
                   ? 'success'
                   : 'danger'}
               >
                 {sale.taken_classes < sale.classes
-                  ? `Quedan ${sale.classes - sale.taken_classes} clases`
+                  ? `${status === 'vencido' && !classesWasCompleted ? 'Sobraron' : 'Quedan'} ${sale.classes - sale.taken_classes} clases`
                   : 'Se acabaron las clases'}
               </Chip>
             }
@@ -73,13 +81,13 @@ export const SaleModal: FC<Props> = ({ user, sale, handleclick }) => {
 
             <Chip size='sm'
               variant='flat'
-              color={daysBetweenTwoDates === 0
-                ? 'warning'
-                : daysBetweenTwoDates < 0 ? 'danger' : 'success'}
+              color={status === 'vigente'
+                ? 'success'
+                : status === 'vencido' ? 'danger' : 'warning'}
             >
               {daysBetweenTwoDates === 0
                 ? 'Se vence hoy'
-                : daysBetweenTwoDates > 0 ? `Quedan ${daysBetweenTwoDates} días` : `Tu plan se venció hace ${daysBetweenTwoDates * -1} días`}
+                : daysBetweenTwoDates > 0 ? `${status === 'vigente' ? 'Quedan' : 'Sobraron'} ${daysBetweenTwoDates} días` : `Tu plan se venció hace ${daysBetweenTwoDates * -1} días`}
             </Chip>
           </div>
 
