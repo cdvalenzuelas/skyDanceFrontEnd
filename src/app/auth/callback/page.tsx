@@ -20,10 +20,14 @@ export default function Page() {
     // VER SI ESTÁ REGISTRADO EN LA PAGINA
     const user = await getUserById(id)
 
-    const newdate = new Date()
-
     if (user[0].active_plan !== null) {
-      if (user[0].active_plan?.active && user[0].active_plan.end_date > newdate) {
+      // Verify activePalnStatus
+      const currentDate = new Date()
+      const currentDate2 = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())
+      const classesWasCompleted = user[0].active_plan.classes !== -1 && (user[0].active_plan.classes === user[0].active_plan.taken_classes)
+      const dateWasReached = user[0].active_plan.end_date < currentDate2
+
+      if ((classesWasCompleted || dateWasReached) && user[0].active_plan.active) {
         user[0].active_plan.active = false
 
         updateActivePlanStatus([user[0].active_plan.id as string])

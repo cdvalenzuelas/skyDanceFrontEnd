@@ -53,7 +53,11 @@ export const getUsers = async (): Promise<User[]> => {
 
         const endDate = createDateFromString(activePlan1.end_date)
 
-        if (endDate < currentDate2 && activePlan1.active) {
+        // Verify activePalnStatus
+        const classesWasCompleted = activePlan1.classes !== -1 && (activePlan1.classes === activePlan1.taken_classes)
+        const dateWasReached = endDate < currentDate2
+
+        if ((classesWasCompleted || dateWasReached) && activePlan1.active) {
           expiredPacks.push(activePlan1.id as string)
         }
 
@@ -62,7 +66,7 @@ export const getUsers = async (): Promise<User[]> => {
           sale_date: createDateFromString(activePlan1.sale_date),
           start_date: createDateFromString(activePlan1.start_date),
           end_date: endDate,
-          active: endDate >= currentDate2
+          active: !(classesWasCompleted || dateWasReached)
         }
       }
 
