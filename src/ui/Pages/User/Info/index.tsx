@@ -5,12 +5,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons'
 import { UserChip } from '@/ui/Global/UserChip'
 import { userColor } from '@/utils/users'
+import { formatCurency } from '@/utils/currency'
 
 export const Info = () => {
   // VIENE DEL ESTADO
   const userId = useUserState(state => state.id)
   const users = useUsersState(item => item.users)
   const referralCode = useUserState(item => item.referral_code)
+  const reward = useUserState(item => item.reward)
   const user = users.filter(item2 => item2.id === userId)[0]
 
   if (user === undefined) {
@@ -20,8 +22,6 @@ export const Info = () => {
   const daysBetweenTwoDates = user.active_plan !== null
     ? getDaysBetweenTwoDates(user.active_plan.end_date, new Date())
     : 0
-
-  console.log(user)
 
   return (<section className='flex flex-col gap-5 px-5 py-5 items-center justify-center h-full'>
     <Card style={{ padding: '2rem' }}>
@@ -42,13 +42,23 @@ export const Info = () => {
 
       <div className='flex flex-col gap-2 py-3 px-2'>
 
-        <span style={{ color: 'var(--blue1)' }}>Código de referidos</span>
+        <span style={{ color: 'var(--blue2)' }}>Código de referidos</span>
 
         <Snippet
           hideSymbol
-          color='success'
+          color='secondary'
           size='md' className='flex items-center'>
           {referralCode}
+        </Snippet>
+
+        <span style={{ color: 'var(--blue2)' }}>Recompensa acumulada</span>
+
+        <Snippet
+          hideSymbol
+          hideCopyButton
+          color='secondary'
+          size='md' className='flex items-center h-12'>
+          {`$ ${formatCurency(reward)}`}
         </Snippet>
 
       </div>

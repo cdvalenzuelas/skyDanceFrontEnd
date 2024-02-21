@@ -21,6 +21,8 @@ export const useForm = ({ danceClass, setInternalDanceClass, setIsOpenEditableMo
   const packs = usePacksState(state => state.packs)
   const [arrowState, setArrowState] = useState<boolean>(false)
   const [userWishDeleteClass, setUserWishDeleteClass] = useState<boolean>(false)
+  const { deleteClass } = useDeleteClass({ danceClass })
+  const { createClass } = useCreateClass({ danceClass, packs })
 
   useEffect(() => {
     setTeachers(getTeachers())
@@ -66,7 +68,7 @@ export const useForm = ({ danceClass, setInternalDanceClass, setIsOpenEditableMo
 
   // Eliminar la clase
   const handleConfirmDelete = async (e: MouseEvent<HTMLButtonElement>) => {
-    await useDeleteClass({ danceClass })
+    await deleteClass()
     updateModals()
   }
 
@@ -77,7 +79,7 @@ export const useForm = ({ danceClass, setInternalDanceClass, setIsOpenEditableMo
 
   // Crear la clase
   const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
-    await useCreateClass({ danceClass, packs }) // cambiamos los datos en el estado de la aplicación
+    await createClass() // cambiamos los datos en el estado de la aplicación
     updateModals() // actualizamos modales
   }
 

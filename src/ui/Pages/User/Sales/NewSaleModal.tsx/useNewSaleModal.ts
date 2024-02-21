@@ -2,10 +2,10 @@
 import { type MouseEvent, useState, type Dispatch, type SetStateAction, type ChangeEvent } from 'react'
 
 // Componets
-import { usePacksState, useUsersState, type PaymentMode, type Pack, useSalesState, type User, useUserState } from '@state'
-import { createSale } from '@api'
+import { usePacksState, useUsersState, type PaymentMode, type Pack, type User } from '@state'
 import { type nameOptions, createDefaultSale } from '../utils'
 import { useUserAndPackChange } from './useUserAndPackChange'
+import { useCreatesale } from '@/apiInternal'
 
 interface Props {
   setIsOpen: Dispatch<SetStateAction<boolean>>
@@ -14,9 +14,6 @@ interface Props {
 export const useNewSaleModal = ({ setIsOpen }: Props) => {
   // Hooks
   const packs = usePacksState(state => state.packs)
-  const addSale = useSalesState(state => state.addSale)
-  const activateUser = useUserState(state => state.activateUser)
-  const updateUserPack = useUsersState(state => state.updateUserPack)
   const users = useUsersState(state => state.users)
 
   const [user, setUser] = useState<User | null>(null)
@@ -28,7 +25,9 @@ export const useNewSaleModal = ({ setIsOpen }: Props) => {
   // Si el usuario ya esta establecido y se le quier dar una cortesía pero ya ha comprado algo antes
   const defaultSale = createDefaultSale(packs[0])
 
-  const { startDateMessage, promotion, internalSale, courtesPackId } = useUserAndPackChange({ user, pack, sale: defaultSale, paymentMode })
+  const { startDateMessage, promotion, internalSale, courtesPackId } = useUserAndPackChange({ user, pack, sale: defaultSale, paymentMode, referralUser })
+
+  const { createSale } = useCreatesale({ internalSale, referralUser })
 
   // Functions
   const getUser = (user: User | null): void => {
@@ -36,11 +35,7 @@ export const useNewSaleModal = ({ setIsOpen }: Props) => {
   }
 
   const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
-    const [sale] = await createSale(internalSale)
-    addSale(sale)
-
-    updateUserPack(sale.user_id, sale)
-    activateUser(sale)
+    createSale()
     setIsOpen(false)
   }
 
@@ -65,6 +60,8 @@ export const useNewSaleModal = ({ setIsOpen }: Props) => {
 
     if (internalReferralUser.length > 0) {
       setReferralUser(internalReferralUser[0])
+    } else {
+      setReferralUser(null)
     }
 
     setReferralCode(value)

@@ -36,6 +36,7 @@ export default function Page() {
         }
       }
 
+      setUser(user[0])
       router.replace('/user')
     } else {
       const newUser = await createNewUser(scheletonUser)
