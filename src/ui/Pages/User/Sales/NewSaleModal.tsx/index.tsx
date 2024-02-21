@@ -1,5 +1,5 @@
 // Libs
-import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Select, SelectItem, Input, Divider, Textarea, Chip, Avatar, Card, CardBody } from '@nextui-org/react'
+import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Select, SelectItem, Input, Divider, Textarea, Chip, Avatar, Card, CardBody, Snippet } from '@nextui-org/react'
 import type { Dispatch, FC, MouseEvent, SetStateAction } from 'react'
 
 // Components
@@ -45,6 +45,20 @@ export const NewSaleModal: FC<Props> = ({ isOpen, handleOpen, setIsOpen }) => {
         <SearchUser
           getSelectedUser={getUser}
         />
+
+        {user !== null && user.reward > 0 && <div>
+
+          <span style={{ color: 'var(--blue2)' }}>Recompensa acumulada</span>
+
+          <Snippet
+            hideSymbol
+            hideCopyButton
+            color='secondary'
+            size='md' className='flex items-center h-12'>
+            {`$ ${formatCurency(user.reward)}`}
+          </Snippet>
+
+        </div>}
 
         <div className='flex gap-5'>
           {packs.length > 0 && <Select

@@ -11,7 +11,7 @@ export const getUsers = async (): Promise<User[]> => {
     // Hacer la query
     const { data, error } = await supabase
       .from('users')
-      .select('id, name, image, role, active_plan, instagram_id, mail, phone, referral_code')
+      .select('id, name, image, role, active_plan, instagram_id, mail, phone, referral_code, reward')
 
     // Si no viene data o hay un error lanzar error
     if (data === null || data.length === 0) {
@@ -45,7 +45,7 @@ export const getUsers = async (): Promise<User[]> => {
     const currentDate2 = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())
 
     // Vamos a rellenar los active_plan status
-    users.forEach(({ id, image, active_plan: internalActivePlan, role, name, instagram_id: instagramId, mail, phone, referral_code: referralCode }) => {
+    users.forEach(({ id, image, active_plan: internalActivePlan, role, name, instagram_id: instagramId, mail, phone, referral_code: referralCode, reward }) => {
       let activePlan: Sale | null = null
 
       if (internalActivePlan !== null) {
@@ -80,7 +80,8 @@ export const getUsers = async (): Promise<User[]> => {
         active_plan: activePlan,
         mail,
         phone,
-        referral_code: referralCode
+        referral_code: referralCode,
+        reward
       })
     })
 

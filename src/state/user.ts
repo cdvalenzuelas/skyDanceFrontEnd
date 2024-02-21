@@ -19,6 +19,7 @@ export interface UserFromDB {
   image: string // user_metadata.avatar_url
   instagram_id: string
   active_plan: string | null
+  reward: number
 }
 
 export interface User extends Omit<UserFromDB, 'active_plan'> {
@@ -29,6 +30,7 @@ interface Actions {
   setUser: (user: User) => void
   removeUser: () => void
   activateUser: (sale: Sale) => void
+  updateReward: (sale: number) => void
 }
 
 //  *********************************STATE****************************** //
@@ -43,7 +45,8 @@ const voidUser: User = {
   role: 'user',
   referral_code: '',
   instagram_id: '',
-  active_plan: null
+  active_plan: null,
+  reward: 0
 }
 
 const UserStateApi: StateCreator<User & Actions> = (set, get) => ({
@@ -52,6 +55,9 @@ const UserStateApi: StateCreator<User & Actions> = (set, get) => ({
   removeUser: () => { set({ ...voidUser }) },
   activateUser: (sale) => {
     set({ active_plan: sale })
+  },
+  updateReward: (sale) => {
+    set({ reward: get().reward + sale })
   }
 })
 

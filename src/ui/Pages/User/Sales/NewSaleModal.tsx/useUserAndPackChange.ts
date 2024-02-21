@@ -6,14 +6,15 @@ interface Props {
   sale: Sale
   pack: Pack
   paymentMode: PaymentMode
+  referralUser: User | null
 }
 
-export const useUserAndPackChange = ({ user, sale, pack, paymentMode }: Props) => {
+export const useUserAndPackChange = ({ user, sale, pack, paymentMode, referralUser }: Props) => {
   // DEFINIR TODAS LAS CONSTANTES
   let internalSale = JSON.parse(JSON.stringify(sale)) as Sale
   const { duration, period, classes, price, name, id } = pack
   const [startDateMessage, endDate, currentDay] = endDateOfPack(period, duration)
-  const istPromotionsDays = currentDay <= 11 || (currentDay >= 15 && currentDay <= 20)
+  const istPromotionsDays = currentDay <= 5 || (currentDay >= 15 && currentDay <= 20)
   let promotion = ''
   let userId = ''
   let discountPercentage = 0
@@ -41,8 +42,8 @@ export const useUserAndPackChange = ({ user, sale, pack, paymentMode }: Props) =
     userId = user.id
     // Si es una cortesía
     if (user.active_plan === null || user.active_plan.name === 'cortesia') {
-      promotion = 'Eres nuevo por aquí, así que te damos un 20% de descuento en tu primera compra (aplica para todos los planes).'
-      discountPercentage = 0.2
+      promotion = 'Eres nuevo por aquí, así que te damos hasta un 20% de descuento en tu primera compra (aplica para todos los planes).'
+      discountPercentage = referralUser === null ? 0.15 : 0.2
       discountDescription = 'new user'
       courtesPackId = ''
     } else {
@@ -55,11 +56,13 @@ export const useUserAndPackChange = ({ user, sale, pack, paymentMode }: Props) =
     }
   }
 
+  const reward = user == null ? 0 : user.reward
+
   internalSale = {
     ...internalSale,
     user_id: userId,
-    discount: price * discountPercentage,
-    total_price: price * (1 - discountPercentage),
+    discount: price * discountPercentage + reward,
+    total_price: price * (1 - discountPercentage) - reward,
     discount_description: discountDescription
   }
 
