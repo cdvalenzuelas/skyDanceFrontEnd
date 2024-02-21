@@ -10,9 +10,10 @@ interface Props {
   value: string
   handleclick: (e: MouseEvent<HTMLButtonElement>) => void
   isOpenModals: Record<string, boolean>
+  status: 'vigente' | 'vencido' | 'cortesia'
 }
 
-export const ButtonSale: FC<Props> = ({ sale, user, value, handleclick, isOpenModals }) => {
+export const ButtonSale: FC<Props> = ({ sale, user, value, handleclick, isOpenModals, status }) => {
   return <>
 
     <Button
@@ -27,13 +28,13 @@ export const ButtonSale: FC<Props> = ({ sale, user, value, handleclick, isOpenMo
 
       endContent={<div className='flex gap-2'>
         <Chip color='warning' size='sm'>{sale.name}</Chip>
-        <Chip color={sale.active ? 'success' : 'danger'} size='sm'>{sale.active ? 'vigente' : 'vencido'}</Chip>
+        <Chip color={status === 'vigente' ? 'success' : 'danger'} size='sm'>{status}</Chip>
       </div>}
 
       onClick={handleclick}
       value={value}
       className='flex items-center justify-between gap-5 h-14'
-      color={sale.name === 'cortesia' ? 'warning' : userColor(user)}
+      color={status === 'vigente' ? 'success' : status === 'vencido' ? 'danger' : 'warning'}
       variant='flat'
       radius='full'
     >

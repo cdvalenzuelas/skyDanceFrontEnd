@@ -14,6 +14,9 @@ interface Props {
 export const SaleAccordeon: FC<Props> = ({ filters, selectedUserId }) => {
   const { moneyByPeriod, salesByPeriod, users, isOpenModals, handleclick } = useSaleAccordeon()
 
+  const currentDate = new Date()
+  const currentDate2 = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())
+
   return <Accordion defaultExpandedKeys={[]} className={styles.accordion}>
     {Object.keys(salesByPeriod).map(period => (
 
@@ -24,12 +27,24 @@ export const SaleAccordeon: FC<Props> = ({ filters, selectedUserId }) => {
           {salesByPeriod[period].map(sale => {
             const user = users.filter(user => user.id === sale.user_id)[0]
             const saleId = sale.id as string
+
+            // Verify activePalnStatus
+            const classesWasCompleted = sale.classes !== -1 && (sale.classes === sale.taken_classes)
+            const dateWasReached = sale.end_date < currentDate2
             const status = sale.name === 'cortesia'
               ? 'cortesia'
-              : sale.active ? 'vigente' : 'vencido'
+              : dateWasReached || classesWasCompleted ? 'vencido' : 'vigente'
 
             return filters.includes(status) && (selectedUserId === null || selectedUserId === sale.user_id)
-              ? <ButtonSale key={sale.id} user={user} sale={sale} value={saleId} handleclick={handleclick} isOpenModals={isOpenModals} />
+              ? <ButtonSale
+                key={sale.id}
+                user={user}
+                sale={sale}
+                value={saleId}
+                handleclick={handleclick}
+                isOpenModals={isOpenModals}
+                status={status}
+              />
               : null
           })}
         </div>

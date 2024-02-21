@@ -58,10 +58,6 @@ const UserStateApi: StateCreator<MinimalUsers & Actions> = (set, get) => ({
       if (item.active_plan !== null) {
         item.active_plan.start_date = userDates.start_date
         item.active_plan.end_date = userDates.end_date
-
-        if (item.active_plan.end_date < new Date()) {
-          item.active_plan.active = false
-        }
       }
     })
 

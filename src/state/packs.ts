@@ -9,13 +9,9 @@ export interface Pack {
   id: string
   name: string
   price: number
-  holidays: boolean
-  vacations: boolean
   classes: number
   duration: number
   period: PackPeriod
-  exclude: string[]
-  include: string[]
 }
 
 export interface PackState {

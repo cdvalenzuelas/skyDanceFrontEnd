@@ -42,19 +42,20 @@ export const endDateOfPack = (period: PackPeriod, duration: number): [string, Da
 
   const endDate: Date = new Date(startDate)
 
-  const dayName = days[startDate.getDay()]
-  const day = startDate.getDate()
-  const monthName = months[startDate.getMonth()]
-  const year = startDate.getFullYear()
-
   if (period === 'day') {
-    //
+    startDate.setDate(startDate.getDate() - 15)
+    endDate.setDate(endDate.getDate() - 15)
   } else if (period === 'month') {
     endDate.setMonth(endDate.getMonth() + duration)
     endDate.setDate(endDate.getDate() - 1)
   } else if (period === 'week') {
     endDate.setDate(endDate.getDate() + 7 * duration)
   }
+
+  const dayName = days[startDate.getDay()]
+  const day = startDate.getDate()
+  const monthName = months[startDate.getMonth()]
+  const year = startDate.getFullYear()
 
   // Cambiar el estado de los componetes
   return [
