@@ -130,7 +130,9 @@ export const NewSaleModal: FC<Props> = ({ isOpen, handleOpen, setIsOpen }) => {
 
         <Divider />
 
-        <span>{`Puedes empezar tus clases hoy, recuerda que tu plan se aciva automáticamente el ${startDateMessage}.`}</span>
+        {pack.period !== 'day' && <span>
+          {`Puedes empezar tus clases hoy, recuerda que tu plan se aciva automáticamente el ${startDateMessage}.`}
+        </span>}
 
       </ModalBody>
 

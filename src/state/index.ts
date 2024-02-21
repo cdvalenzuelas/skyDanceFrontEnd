@@ -1,4 +1,3 @@
-export * from './portal'
 export * from './schedule'
 export * from './user'
 export * from './users'

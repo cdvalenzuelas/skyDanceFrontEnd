@@ -2,7 +2,11 @@ import { useState, useEffect, type MouseEvent } from 'react'
 import { useClassesState, useScheduleState, useUserState, type ScheduleClass, useDateState, type AppDate, type DanceClass } from '@state'
 import { getClasses } from '@/api'
 
-export const useCalendar = () => {
+interface Props {
+  userId2: string | null
+}
+
+export const useCalendar = ({ userId2 }: Props) => {
   const getDate = useDateState(state => state.getDate)
   const userId = useUserState(state => state.id)
   const userRole = useUserState(state => state.role)
@@ -137,8 +141,8 @@ export const useCalendar = () => {
     classes: {
       classToEdit,
       hoursOfClassesByDay,
-      classes,
-      schedule,
+      classes: userId2 === null ? classes : classes.filter(item => item.users.map(item2 => item2.id).includes(userId2)),
+      schedule: userId2 === null ? schedule : [],
       classToRead
     },
     modals: {

@@ -24,6 +24,10 @@ export const Form: FC<Props> = ({ danceClass, setInternalDanceClass, setIsOpenEd
     handleChange,
     handleClick,
     handleSubmit,
+    handleConfirmDelete,
+    handleClose,
+    setArrowState,
+    setUserWishDeleteClass,
     getSelectedUsers,
     arrowState,
     userWishDeleteClass
@@ -39,9 +43,8 @@ export const Form: FC<Props> = ({ danceClass, setInternalDanceClass, setIsOpenEd
       color='primary'
       size='md'
       variant='light'
-      name='preview'
       isIconOnly
-      onClick={handleSubmit}
+      onClick={e => { setArrowState(!arrowState) }}
       startContent={<FontAwesomeIcon icon={faChevronDown} />}
     />
 
@@ -51,8 +54,7 @@ export const Form: FC<Props> = ({ danceClass, setInternalDanceClass, setIsOpenEd
       color='primary'
       size='md'
       variant='light'
-      name='preview'
-      onClick={handleSubmit}
+      onClick={e => { setArrowState(!arrowState) }}
       className={`flex-shrink-0 ${styles.preview}`}
       startContent={<FontAwesomeIcon icon={faChevronDown} style={{ transform: arrowState ? 'rotate(180deg)' : 'none' }} />}
     />
@@ -177,14 +179,13 @@ export const Form: FC<Props> = ({ danceClass, setInternalDanceClass, setIsOpenEd
             size='md'
             color='warning'
             variant='flat'
-            name='delete'
             startContent={<FontAwesomeIcon icon={faTriangleExclamation} />}
-            onClick={handleSubmit}
+            onClick={e => { setUserWishDeleteClass(!userWishDeleteClass) }}
           >
             Eliminar
           </Button>
 
-          <Button size='md' color="danger" variant='flat' name='close' onClick={handleSubmit}>
+          <Button size='md' color="danger" variant='flat' onClick={handleClose}>
             Cerrar
           </Button>
 
@@ -202,8 +203,7 @@ export const Form: FC<Props> = ({ danceClass, setInternalDanceClass, setIsOpenEd
               size='md'
               color='secondary'
               variant='flat'
-              name='delete'
-              onClick={handleSubmit}
+              onClick={e => { setUserWishDeleteClass(!userWishDeleteClass) }}
             >
               No
             </Button>
@@ -212,9 +212,8 @@ export const Form: FC<Props> = ({ danceClass, setInternalDanceClass, setIsOpenEd
               size='md'
               color='danger'
               variant='flat'
-              name='confirmDelete'
               startContent={<FontAwesomeIcon icon={faTriangleExclamation} />}
-              onClick={handleSubmit}
+              onClick={handleConfirmDelete}
             >
               Si
             </Button>

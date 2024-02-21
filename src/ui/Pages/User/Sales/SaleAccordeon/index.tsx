@@ -31,20 +31,9 @@ export const SaleAccordeon: FC<Props> = ({ filters, selectedUserId }) => {
             // Verify activePalnStatus
             const classesWasCompleted = sale.classes !== -1 && (sale.classes === sale.taken_classes)
             const dateWasReached = sale.end_date < currentDate2
-
-            console.log('-----------------------------')
-            console.log(user.name)
-            console.log(sale.end_date)
-            console.log(currentDate2)
-            console.log(sale.end_date < currentDate2)
-            console.log(dateWasReached)
-            console.log(classesWasCompleted)
-
             const status = sale.name === 'cortesia'
               ? 'cortesia'
               : dateWasReached || classesWasCompleted ? 'vencido' : 'vigente'
-
-            console.log(status)
 
             return filters.includes(status) && (selectedUserId === null || selectedUserId === sale.user_id)
               ? <ButtonSale

@@ -13,7 +13,7 @@ export const LogIn = () => {
   const handleSignIn = async (e: MouseEvent) => {
     const user = logIn()
     console.log(user)
-    // console.clear()
+    console.clear()
   }
 
   return (

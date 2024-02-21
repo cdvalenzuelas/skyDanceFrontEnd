@@ -19,8 +19,8 @@ export const updateActivePlanStatus = async (salesIds: string[]): Promise<void> 
       throw new Error()
     }
 
-    // console.clear()
+    console.clear()
   } catch {
-    // console.clear()
+    console.clear()
   }
 }

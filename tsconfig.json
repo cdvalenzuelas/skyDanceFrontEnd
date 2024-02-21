@@ -38,6 +38,9 @@
       ],
       "@utils": [
         "./src/utils"
+      ],
+      "@apiInternal": [
+        "./src/apiInternal"
       ]
     }
   },

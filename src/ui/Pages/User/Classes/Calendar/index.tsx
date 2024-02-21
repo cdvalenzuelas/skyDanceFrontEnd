@@ -6,9 +6,14 @@ import { DesktopEditableClassButtons, DesktopReadableClassButtons, MobileClassBu
 import { MobileDayModal, EditableModal, ReadableModal } from './Modals'
 import styles from './styles.module.css'
 import { Button } from '@nextui-org/react'
+import { type FC } from 'react'
 
-export const Calendar = () => {
-  const { date, classes, userRole, handleClick, modals, handleMonth, userId } = useCalendar()
+interface Props {
+  userId: string | null
+}
+
+export const Calendar: FC<Props> = ({ userId: userId2 }) => {
+  const { date, classes, userRole, handleClick, modals, handleMonth, userId } = useCalendar({ userId2 })
   const curentdate = new Date()
 
   const currentMonth = curentdate.getMonth()
