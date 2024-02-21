@@ -39,7 +39,7 @@ export default function Page() {
       const newUser = await createNewUser(scheletonUser)
 
       setUser(newUser[0])
-      router.replace('/user')
+      router.push('/user')
       // Mandarlo a registrar
       // router.push('/signin')
     }
