@@ -1,5 +1,5 @@
 // Libs
-import { type MouseEvent, useState, type Dispatch, type SetStateAction } from 'react'
+import { type MouseEvent, useState, type Dispatch, type SetStateAction, type ChangeEvent } from 'react'
 
 // Componets
 import { usePacksState, useUsersState, type PaymentMode, type Pack, useSalesState, type User, useUserState } from '@state'
@@ -17,10 +17,13 @@ export const useNewSaleModal = ({ setIsOpen }: Props) => {
   const addSale = useSalesState(state => state.addSale)
   const activateUser = useUserState(state => state.activateUser)
   const updateUserPack = useUsersState(state => state.updateUserPack)
+  const users = useUsersState(state => state.users)
 
   const [user, setUser] = useState<User | null>(null)
   const [pack, setPack] = useState<Pack>(packs[0])
   const [paymentMode, setPaymentMode] = useState<PaymentMode>('chash')
+  const [referralCode, setReferralCode] = useState<string>('')
+  const [referralUser, setReferralUser] = useState<User | null>(null)
 
   // Si el usuario ya esta establecido y se le quier dar una cortesía pero ya ha comprado algo antes
   const defaultSale = createDefaultSale(packs[0])
@@ -55,14 +58,29 @@ export const useNewSaleModal = ({ setIsOpen }: Props) => {
     }
   }
 
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.currentTarget.value
+
+    const internalReferralUser = users.filter(item => item.referral_code === value)
+
+    if (internalReferralUser.length > 0) {
+      setReferralUser(internalReferralUser[0])
+    }
+
+    setReferralCode(value)
+  }
+
   return {
-    handles: { handSelect, handleSubmit },
+    handles: { handSelect, handleSubmit, handleChange },
     packs,
     startDateMessage,
     internalSale,
     pack,
     getUser,
     promotion,
-    courtesPackId
+    courtesPackId,
+    user,
+    referralCode,
+    referralUser
   }
 }

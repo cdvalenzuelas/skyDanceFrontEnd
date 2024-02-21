@@ -37,9 +37,6 @@ export const getClasses = async (year: number, month: number): Promise<DanceClas
 
     const ids = ids2.filter(item => item !== null && item !== '')
 
-    console.log(ids)
-    console.clear()
-
     const users = await populate<User[]>({ table: 'users', ids, select: '*' })
 
     const classes: DanceClass[] = classesFromDB.map(item => {

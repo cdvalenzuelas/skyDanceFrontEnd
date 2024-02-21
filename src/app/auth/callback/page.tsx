@@ -20,30 +20,28 @@ export default function Page() {
     // VER SI ESTÁ REGISTRADO EN LA PAGINA
     const user = await getUserById(id)
 
-    if (user[0].active_plan !== null) {
-      // Verify activePalnStatus
-      const currentDate = new Date()
-      const currentDate2 = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())
-      const classesWasCompleted = user[0].active_plan.classes !== -1 && (user[0].active_plan.classes === user[0].active_plan.taken_classes)
-      const dateWasReached = user[0].active_plan.end_date < currentDate2
-
-      if ((classesWasCompleted || dateWasReached) && user[0].active_plan.active) {
-        user[0].active_plan.active = false
-
-        updateActivePlanStatus([user[0].active_plan.id as string])
-      }
-    }
-
-    setUser(user[0])
-
     // Si el usuario existe llevarlo a la pagina de inicio, de lo contrario crear un usuario
     if (user.length > 0) {
+      if (user[0].active_plan !== null) {
+        // Verify activePalnStatus
+        const currentDate = new Date()
+        const currentDate2 = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())
+        const classesWasCompleted = user[0].active_plan.classes !== -1 && (user[0].active_plan.classes === user[0].active_plan.taken_classes)
+        const dateWasReached = user[0].active_plan.end_date < currentDate2
+
+        if ((classesWasCompleted || dateWasReached) && user[0].active_plan.active) {
+          user[0].active_plan.active = false
+
+          updateActivePlanStatus([user[0].active_plan.id as string])
+        }
+      }
+
       router.replace('/user')
     } else {
       const newUser = await createNewUser(scheletonUser)
 
       setUser(newUser[0])
-      router.push('/user')
+      router.replace('/user')
       // Mandarlo a registrar
       // router.push('/signin')
     }
@@ -61,7 +59,8 @@ export default function Page() {
             mail: user?.email as string,
             phone: user?.phone as string,
             role: 'user',
-            image: user?.user_metadata.avatar_url
+            image: user?.user_metadata.avatar_url,
+            referral_code: user?.email?.split('@')[0]
           }
 
           verifyUser(user?.id as string, scheletonUser)

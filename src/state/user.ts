@@ -13,6 +13,7 @@ export interface UserFromDB {
   auth_id: string
   name: string
   mail: string
+  referral_code: string
   phone: string
   role: UserRole// viene del server
   image: string // user_metadata.avatar_url
@@ -40,6 +41,7 @@ const voidUser: User = {
   auth_id: '',
   phone: '',
   role: 'user',
+  referral_code: '',
   instagram_id: '',
   active_plan: null
 }
