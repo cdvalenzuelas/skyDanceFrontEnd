@@ -1,28 +1,37 @@
 import { type Product, useProductsState } from '@state'
 import { Input, Button, Card, Divider } from '@nextui-org/react'
-import { useState, type ChangeEvent, type MouseEvent, type FC } from 'react'
+import { useState, type ChangeEvent, type MouseEvent, type FC, useEffect } from 'react'
 import styles from './styles.module.css'
 import { formatCurency } from '@/utils/currency'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
 
-interface Props {
-  getProductsIds?: (productsIds: string[]) => void
-  getSelectedProducts?: (products: Product[]) => void
-}
-
 interface Summary {
   produc_id: string
   quantity: number
+  price: number
+  total: number
+  profit: number
+  total_profit: number
 }
 
-export const SearchProducts: FC<Props> = ({ getSelectedProducts, getProductsIds }) => {
+interface Props {
+  getSummary?: (summary: Summary[]) => void
+}
+
+export const SearchProducts: FC<Props> = ({ getSummary }) => {
   const products = useProductsState(state => state.products)
 
   const [search, setSearch] = useState<string>('')
   const [searchResults, setSearchResults] = useState<Product[]>([])
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
   const [summary, setSummary] = useState<Summary[]>([])
+
+  useEffect(() => {
+    if (getSummary !== undefined) {
+      getSummary(summary)
+    }
+  }, [summary])
 
   // Botones de búsqueda usuarios y estilo
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -53,10 +62,14 @@ export const SearchProducts: FC<Props> = ({ getSelectedProducts, getProductsIds 
 
     const newSelectedProducts = [...selectedProducts, selectedProduct]
 
-    const internalSummary = newSelectedProducts.map(item => {
+    const internalSummary: Summary[] = newSelectedProducts.map(item => {
       return {
         produc_id: item.id,
-        quantity: 1
+        quantity: 1,
+        price: item.selling_price,
+        total: item.selling_price,
+        profit: item.profit,
+        total_profit: item.profit
       }
     })
 
@@ -71,11 +84,17 @@ export const SearchProducts: FC<Props> = ({ getSelectedProducts, getProductsIds 
     const filteredsummary = summary.filter(item => item.produc_id === producId)[0]
     const notFilteredsummary = summary.filter(item => item.produc_id !== producId)
 
+    let internalQuantity = filteredsummary.quantity
+
     if (name === 'more') {
-      filteredsummary.quantity = filteredsummary.quantity + 1
+      internalQuantity = internalQuantity + 1
     } else {
-      filteredsummary.quantity = filteredsummary.quantity - 1
+      internalQuantity = internalQuantity - 1
     }
+
+    filteredsummary.quantity = internalQuantity
+    filteredsummary.total = internalQuantity * filteredsummary.price
+    filteredsummary.total_profit = internalQuantity * filteredsummary.profit
 
     setSummary([...notFilteredsummary, filteredsummary])
   }
@@ -113,7 +132,7 @@ export const SearchProducts: FC<Props> = ({ getSelectedProducts, getProductsIds 
 
       return <div
         key={product.id}
-        className='flex py-1 px-1 h-10'>
+        className='flex py-1 px-1 h-10 mt-3'>
         <div className='flex flex-row items-center justify-between align-middle py-1 w-full'>
           <div className='flex gap-2 items-center'>
             <Button
@@ -126,6 +145,7 @@ export const SearchProducts: FC<Props> = ({ getSelectedProducts, getProductsIds 
               isDisabled={quantity === product.quantity}
               startContent={<FontAwesomeIcon icon={faPlus} />}
             />
+            <span>{quantity}</span>
             <Button
               isIconOnly
               size='sm'
@@ -138,7 +158,7 @@ export const SearchProducts: FC<Props> = ({ getSelectedProducts, getProductsIds 
             />
             <span>{product.name}</span>
           </div>
-          <span>({quantity}) ${formatCurency(product.selling_price * quantity)}</span>
+          <span>({quantity} x $ {formatCurency(product.selling_price)}) ${formatCurency(product.selling_price * quantity)}</span>
         </div>
       </div>
     })}
