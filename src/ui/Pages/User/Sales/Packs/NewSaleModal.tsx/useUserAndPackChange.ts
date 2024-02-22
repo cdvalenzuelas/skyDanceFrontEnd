@@ -1,5 +1,5 @@
 import type { User, Sale, Pack, PaymentMode } from '@state'
-import { endDateOfPack } from '../utils'
+import { endDateOfPack } from '../../utils'
 
 interface Props {
   user: User | null

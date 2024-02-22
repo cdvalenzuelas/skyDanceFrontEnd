@@ -1,6 +1,6 @@
 import { Accordion, AccordionItem, Chip, Divider } from '@nextui-org/react'
 import { ButtonSale } from '../SaleButton'
-import styles from '../styles.module.css'
+import styles from '../../styles.module.css'
 
 import { useSaleAccordeon } from './useSaleAccordeon'
 import { type FC } from 'react'

@@ -3,7 +3,7 @@ import { type MouseEvent, useState, type Dispatch, type SetStateAction, type Cha
 
 // Componets
 import { usePacksState, useUsersState, type PaymentMode, type Pack, type User } from '@state'
-import { type nameOptions, createDefaultSale } from '../utils'
+import { type nameOptions, createDefaultSale } from '../../utils'
 import { useUserAndPackChange } from './useUserAndPackChange'
 import { useCreatesale } from '@/apiInternal'
 

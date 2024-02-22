@@ -3,7 +3,7 @@ import { formardate, getDaysBetweenTwoDates } from '@/utils/dates'
 import { userColor } from '@/utils/users'
 import { User, Chip, Divider, Modal, ModalHeader, ModalContent, ModalFooter, ModalBody, Button } from '@nextui-org/react'
 import type { FC, MouseEvent } from 'react'
-import styles from '../styles.module.css'
+import styles from '../../styles.module.css'
 
 interface Props {
   user: AppUser

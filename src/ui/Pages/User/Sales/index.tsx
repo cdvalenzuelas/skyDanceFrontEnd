@@ -1,71 +1,75 @@
 // Lib
-import { type MouseEvent, useState } from 'react'
-import { Button, Card, CheckboxGroup, Divider, Checkbox } from '@nextui-org/react'
+import { useState, type MouseEvent } from 'react'
+import { Button, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react'
 import styles from './styles.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
-// Components
-import { NewSaleModal } from './NewSaleModal.tsx'
-import { SaleAccordeon } from './SaleAccordeon'
-import { SearchUser } from '@/ui/Global/SearchUser'
+import { Packs } from './Packs'
+import { Products } from './Products'
+
+type SalesStage = 'packs' | 'products' | 'rent' | 'kids' | 'events' | 'privateClass'
 
 export const Sales = () => {
+  const [popoverIsOpnen, setPopoverIsOpnen] = useState<boolean>(false)
+  const [salesStage, setSalesStage] = useState<SalesStage>('packs')
   const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [filters, setFilters] = useState<string[]>(['vigente'])
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
 
-  const getUserId = (userId: string | null) => {
-    setSelectedUserId(userId)
-  }
+  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
+    const name = e.currentTarget.name as SalesStage
 
-  // const sales = useSalesState(state => state.sales)
-  const handleOpen = (e: MouseEvent<HTMLButtonElement>) => {
-    const name = e.currentTarget.name as 'open' | 'close'
+    if (name === 'packs' || name === 'products') {
+      setIsOpen(true)
+    }
 
-    setIsOpen(name === 'open')
+    setSalesStage(name)
+    setPopoverIsOpnen(false)
   }
 
   return (<>
 
-    <Card className={styles.form}>
+    {salesStage === 'packs' && <Packs isOpen={isOpen} setIsOpen={setIsOpen} />}
+    {salesStage === 'products' && <Products isOpen={isOpen} setIsOpen={setIsOpen} />}
 
-      <SearchUser showAllUsers={true} getUserId={getUserId} />
+    <Popover
+      onClick={e => { setPopoverIsOpnen(false) }}
+      isOpen={popoverIsOpnen}
+      defaultOpen={false}
+      triggerType='listbox'
+      backdrop='opaque'
+      placement='top-end'
+      offset={40}
+      classNames={{
+        content: [styles.popoverContent]
+      }}
+    >
 
-      <CheckboxGroup
-        orientation="horizontal"
-        color="secondary"
-        className='flex justify-between'
-        value={filters}
-        onValueChange={setFilters}
-      >
-        <Checkbox value="vigente">vigente</Checkbox>
-        <Checkbox value="vencido">vencido</Checkbox>
-        <Checkbox value="cortesia">cortesia</Checkbox>
-      </CheckboxGroup>
+      <PopoverTrigger>
+        <Button
+          size='lg'
+          color='primary'
+          className={styles.newSale}
+          variant='shadow'
+          isIconOnly
+          onClick={e => { setPopoverIsOpnen(true) }}
+          radius='full'
+          startContent={<FontAwesomeIcon icon={faPlus} style={{ color: '#fff' }} />}
+          name='open' />
+      </PopoverTrigger>
 
-    </Card>
+      <PopoverContent>
+        <div className='flex flex-col items-end'>
 
-    <Divider />
+          <Button size='lg' className={styles.popoverButton}>Arriendos <div className={styles.icon}>🏠</div></Button>
+          <Button size='lg' className={styles.popoverButton}>Kids <div className={styles.icon}>👶</div></Button>
+          <Button size='lg' className={styles.popoverButton}>Eventos <div className={styles.icon}>📆</div></Button>
+          <Button size='lg' className={styles.popoverButton}>Clases Personalizadas <div className={styles.icon}>💃</div></Button>
+          <Button size='lg' className={styles.popoverButton} name='products' onClick={handleClick}>Alimentos <div className={styles.icon}>🥤</div></Button>
+          <Button size='lg' className={styles.popoverButton} name='packs' onClick={handleClick}>Planes <div className={styles.icon}>🤑</div></Button>
 
-    <SaleAccordeon filters={filters} selectedUserId={selectedUserId} />
+        </div>
+      </PopoverContent>
 
-    <Button
-      size='lg'
-      color='primary'
-      className={styles.newSale}
-      variant='shadow'
-      onClick={handleOpen}
-      isIconOnly
-      radius='full'
-      startContent={<FontAwesomeIcon icon={faPlus} style={{ color: '#fff' }} />}
-      name='open' />
-
-    {isOpen && <NewSaleModal
-      isOpen={true}
-      handleOpen={handleOpen}
-      setIsOpen={setIsOpen}
-    />}
-
+    </Popover>
   </>)
 }

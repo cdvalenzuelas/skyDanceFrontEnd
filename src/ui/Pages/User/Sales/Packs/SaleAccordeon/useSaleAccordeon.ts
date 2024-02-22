@@ -1,7 +1,7 @@
 import { getSalesFromDB, createDateFromString } from '@/api'
 import { useUsersState, useSalesState, type Sale } from '@/state'
 import { useState, useEffect, type MouseEvent } from 'react'
-import { months } from '../utils'
+import { months } from '../../utils'
 
 export const useSaleAccordeon = () => {
   const users = useUsersState(state => state.users)

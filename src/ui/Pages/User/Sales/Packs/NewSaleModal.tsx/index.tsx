@@ -5,7 +5,7 @@ import type { Dispatch, FC, MouseEvent, SetStateAction } from 'react'
 // Components
 import { useNewSaleModal } from './useNewSaleModal'
 import { SearchUser } from '@/ui/Global/SearchUser'
-import { paymentModes, duaration } from '../utils'
+import { paymentModes, duaration } from '../../utils'
 import { formatCurency } from '@/utils/currency'
 import { userColor } from '@/utils/users'
 import styles from './styles.module.css'
