@@ -97,7 +97,7 @@ export const NewSaleModal: FC<Props> = ({ isOpen, handleOpen, setIsOpen }) => {
 
         </div>
 
-        {user !== null && (user.active_plan === null || user.active_plan.name === 'cortesia') && <div className={styles.referralContainer}>
+        {user !== null && (user.active_plan === null || user.active_plan.name === 'cortesia') && pack.name !== 'cortesia' && <div className={styles.referralContainer}>
           {packs.length > 0 && <Input
             label='Código de referidos'
             placeholder={user.referral_code}

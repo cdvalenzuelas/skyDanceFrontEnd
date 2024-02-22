@@ -30,7 +30,8 @@ export const Form: FC<Props> = ({ danceClass, setInternalDanceClass, setIsOpenEd
     setUserWishDeleteClass,
     getSelectedUsers,
     arrowState,
-    userWishDeleteClass
+    userWishDeleteClass,
+    saveButtonIsDisabled
   } = useForm({ danceClass, setInternalDanceClass, setIsOpenEditableModals, isOpnenEditableModals })
 
   return (<div
@@ -189,7 +190,7 @@ export const Form: FC<Props> = ({ danceClass, setInternalDanceClass, setIsOpenEd
             Cerrar
           </Button>
 
-          <Button size='md' color="primary" name='save' onClick={handleSubmit}>
+          <Button size='md' color="primary" name='save' onClick={handleSubmit} isDisabled={saveButtonIsDisabled}>
             Guardar
           </Button>
         </>}

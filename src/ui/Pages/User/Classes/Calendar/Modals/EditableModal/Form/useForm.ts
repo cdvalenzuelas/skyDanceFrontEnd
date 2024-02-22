@@ -23,6 +23,7 @@ export const useForm = ({ danceClass, setInternalDanceClass, setIsOpenEditableMo
   const [userWishDeleteClass, setUserWishDeleteClass] = useState<boolean>(false)
   const { deleteClass } = useDeleteClass({ danceClass })
   const { createClass } = useCreateClass({ danceClass, packs })
+  const [saveButtonIsDisabled, setSaveButtonIsDisabled] = useState<boolean>(false)
 
   useEffect(() => {
     setTeachers(getTeachers())
@@ -79,8 +80,10 @@ export const useForm = ({ danceClass, setInternalDanceClass, setIsOpenEditableMo
 
   // Crear la clase
   const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
+    setSaveButtonIsDisabled(true)
     await createClass() // cambiamos los datos en el estado de la aplicación
     updateModals() // actualizamos modales
+    setSaveButtonIsDisabled(false)
   }
 
   // Seleccionar usuarios
@@ -103,6 +106,7 @@ export const useForm = ({ danceClass, setInternalDanceClass, setIsOpenEditableMo
     setUserWishDeleteClass,
     getSelectedUsers,
     arrowState,
-    userWishDeleteClass
+    userWishDeleteClass,
+    saveButtonIsDisabled
   }
 }
