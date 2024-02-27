@@ -1,9 +1,9 @@
-import type { Dispatch, FC, SetStateAction } from 'react'
-// import { ProductsAccordeon } from './ProductsAccordeon'
-// import { NewSaleModal } from './NewSaleModal.tsx'
-import { type DanceClass, useClassesState, type User } from '@/state'
+import { type Dispatch, type FC, type SetStateAction, type MouseEvent, useState, useEffect } from 'react'
+import { type DanceClass, useClassesState, type User, usePaymentsState, type Payment } from '@/state'
 import { Avatar, Button, Chip } from '@nextui-org/react'
 import { formatCurency } from '@/utils/currency'
+import { NewSaleModal } from './NewSaleModal.tsx'
+import { getPayments } from '@/api'
 
 interface Props {
   isOpen: boolean
@@ -13,15 +13,19 @@ interface Props {
 type ClassesByTeacher = Record<string, DanceClass[]>
 
 export const Teachers: FC<Props> = ({ isOpen, setIsOpen }) => {
-  // const sales = useSalesState(state => state.sales)
-  /* const handleOpen = (e: MouseEvent<HTMLButtonElement>) => {
-    const name = e.currentTarget.name as 'open' | 'close'
-
-    setIsOpen(name === 'open')
-  } */
-
   const classesStore = useClassesState(state => state.classesStore)
-  // const users = useUsersState(state => state.users)
+  const setPaymnets = usePaymentsState(state => state.setPayments)
+  const payments = usePaymentsState(state => state.payments)
+
+  useEffect(() => {
+    (async () => {
+      const paymentsFromDB = await getPayments()
+      setPaymnets(paymentsFromDB)
+    })()
+  }, [])
+
+  const [selectedTeacher, setSelectedTeacher] = useState<User | null>(null)
+  const [paymentsByTeacher, setPaymentsByTeacher] = useState<Payment[]>([])
 
   const teachers: User[] = []
 
@@ -38,6 +42,19 @@ export const Teachers: FC<Props> = ({ isOpen, setIsOpen }) => {
     }
   })
 
+  // const sales = useSalesState(state => state.sales)
+  const handleOpen = (e: MouseEvent<HTMLButtonElement>, teacher: User | null) => {
+    const name = e.currentTarget.name as 'open' | 'close'
+
+    if (name === 'open') {
+      setSelectedTeacher(teacher)
+      const internalPaymentsByTeacher = payments.filter(payment => payment.teacher === teacher?.id)
+      setPaymentsByTeacher(internalPaymentsByTeacher)
+    }
+
+    setIsOpen(name === 'open')
+  }
+
   return <>
     <h1>Profesores</h1>
 
@@ -46,13 +63,16 @@ export const Teachers: FC<Props> = ({ isOpen, setIsOpen }) => {
       {Object.keys(classesByTeacher).map(teacherId => {
         const teacher = teachers.filter(teacher => teacherId === teacher.id)[0]
         const debt = classesByTeacher[teacherId].reduce((a, b) => a + b.price, 0)
+        const totalPaymentsByTeacher = payments.filter(payment => payment.teacher === teacherId).reduce((a, b) => a + b.amount, 0)
+        const totalDebt = debt - totalPaymentsByTeacher
 
         return <Button
           className='h-14 flex items-center justify-between py-2'
-          color={debt >= 0 ? 'warning' : 'success'}
+          color={totalDebt >= 0 ? 'warning' : 'success'}
           size='lg'
           variant='flat'
-          style={{ order: debt * -1 }}
+          style={{ order: totalDebt * -1 }}
+          name='open'
 
           startContent={<Avatar
             size='sm'
@@ -61,9 +81,11 @@ export const Teachers: FC<Props> = ({ isOpen, setIsOpen }) => {
             src={teacher.image}
           />}
 
-          endContent={<Chip size='sm' color={debt >= 0 ? 'warning' : 'success'}>
-            $ {formatCurency(debt)}
+          endContent={<Chip size='sm' color={totalDebt >= 0 ? 'warning' : 'success'}>
+            $ {formatCurency(totalDebt)}
           </Chip>}
+
+          onClick={e => { handleOpen(e, teacher) }}
 
           key={teacherId}>
           {teacher.name}
@@ -72,12 +94,12 @@ export const Teachers: FC<Props> = ({ isOpen, setIsOpen }) => {
 
     </div>
 
-    {/* <ProductsAccordeon />
-
     {isOpen && <NewSaleModal
       isOpen={true}
+      teacher={selectedTeacher}
       handleOpen={handleOpen}
       setIsOpen={setIsOpen}
-    />} */}
+      paymentsByTeacher={paymentsByTeacher}
+    />}
   </>
 }

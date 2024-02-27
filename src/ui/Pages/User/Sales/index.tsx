@@ -23,6 +23,10 @@ export const Sales = () => {
       setIsOpen(true)
     }
 
+    if (name === 'teachers') {
+      setIsOpen(false)
+    }
+
     setSalesStage(name)
     setPopoverIsOpnen(false)
   }
