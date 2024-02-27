@@ -11,8 +11,25 @@ interface Props {
   selectedUserId: string | null
 }
 
+interface Props2 {
+  money: number
+  classes: number
+}
+
+const AccordionItemSubtitle: FC<Props2> = ({ money, classes }) => {
+  return classes !== undefined
+    ? <div className='flex gap-2 items-center'>
+      <Chip color='primary' size='sm'>$ {formatCurency(money)}</Chip>
+      -
+      <Chip color='secondary' size='sm'>$ {formatCurency(classes)}</Chip>
+      =
+      <Chip color={money - classes >= 0 ? 'success' : 'danger'} size='sm'>$ {formatCurency(money - classes)}</Chip>
+    </div>
+    : null
+}
+
 export const SaleAccordeon: FC<Props> = ({ filters, selectedUserId }) => {
-  const { moneyByPeriod, salesByPeriod, users, isOpenModals, handleclick } = useSaleAccordeon()
+  const { moneyByPeriod, salesByPeriod, users, isOpenModals, handleclick, costByPeriod } = useSaleAccordeon()
 
   const currentDate = new Date()
   const currentDate2 = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())
@@ -20,7 +37,7 @@ export const SaleAccordeon: FC<Props> = ({ filters, selectedUserId }) => {
   return <Accordion defaultExpandedKeys={[]} className={styles.accordion} variant='shadow'>
     {Object.keys(salesByPeriod).map(period => (
 
-      <AccordionItem title={period} key={period} subtitle={<Chip color='primary'>$ {formatCurency(moneyByPeriod[period])}</Chip>}
+      <AccordionItem title={period} key={period} subtitle={<AccordionItemSubtitle money={moneyByPeriod[period]} classes={costByPeriod[period]} />}
       >
         <Divider />
 
