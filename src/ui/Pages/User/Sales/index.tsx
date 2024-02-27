@@ -7,8 +7,9 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 import { Packs } from './Packs'
 import { Products } from './Products'
+import { Teachers } from './Teachers'
 
-type SalesStage = 'packs' | 'products' | 'rent' | 'kids' | 'events' | 'privateClass'
+type SalesStage = 'packs' | 'products' | 'rent' | 'kids' | 'events' | 'privateClass' | 'teachers'
 
 export const Sales = () => {
   const [popoverIsOpnen, setPopoverIsOpnen] = useState<boolean>(false)
@@ -30,6 +31,7 @@ export const Sales = () => {
 
     {salesStage === 'packs' && <Packs isOpen={isOpen} setIsOpen={setIsOpen} />}
     {salesStage === 'products' && <Products isOpen={isOpen} setIsOpen={setIsOpen} />}
+    {salesStage === 'teachers' && <Teachers isOpen={isOpen} setIsOpen={setIsOpen} />}
 
     <Popover
       onClick={e => { setPopoverIsOpnen(false) }}
@@ -64,6 +66,7 @@ export const Sales = () => {
           <Button size='lg' className={styles.popoverButton}>Kids <div className={styles.icon}>👶</div></Button>
           <Button size='lg' className={styles.popoverButton}>Eventos <div className={styles.icon}>📆</div></Button>
           <Button size='lg' className={styles.popoverButton}>Clases Personalizadas <div className={styles.icon}>💃</div></Button>
+          <Button size='lg' className={styles.popoverButton} name='teachers' onClick={handleClick}>Profesores <div className={styles.icon}>👩🏼‍🏫</div></Button>
           <Button size='lg' className={styles.popoverButton} name='products' onClick={handleClick}>Alimentos <div className={styles.icon}>🥤</div></Button>
           <Button size='lg' className={styles.popoverButton} name='packs' onClick={handleClick}>Planes <div className={styles.icon}>🤑</div></Button>
 
