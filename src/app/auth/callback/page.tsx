@@ -8,7 +8,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 // Componest | State | types
 import { getUserById, createNewUser } from '@api'
 import { type User, useUserState } from '@state'
-import { updateActivePlanStatus } from '@/api/updateActivePlanStatus'
+import { updateActivePlanStatus } from '@/api/sales/updateActivePlanStatus'
 
 export default function Page() {
   const setUser = useUserState(state => state.setUser)

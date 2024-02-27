@@ -1,4 +1,4 @@
-import { createClass } from '@/api/createClass'
+import { createClass } from '@/api/classes/createClass'
 import { type DanceClass, useClassesState } from '@state'
 
 interface Props {

@@ -1,7 +1,7 @@
 import type { User, SaleFromDb, UserFromDB, Sale } from '@state'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { populate, createDateFromString } from '.'
-import { updateActivePlanStatus } from './updateActivePlanStatus'
+import { populate, createDateFromString } from '..'
+import { updateActivePlanStatus } from '../sales/updateActivePlanStatus'
 
 const supabase = createClientComponentClient()
 

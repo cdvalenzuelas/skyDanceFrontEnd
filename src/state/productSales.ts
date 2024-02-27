@@ -10,7 +10,7 @@ interface ProductSummary {
 
 export interface ProductSale {
   id: string
-  created_at: Date
+  created_at: string
   profit: number
   total: number
   sale: ProductSummary[]
