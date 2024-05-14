@@ -82,7 +82,7 @@ export const useForm = ({ danceClass, setInternalDanceClass, setIsOpenEditableMo
   const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
     setSaveButtonIsDisabled(true)
     await createClass() // cambiamos los datos en el estado de la aplicación
-    updateModals() // actualizamos modales
+    // updateModals() // actualizamos modales
     setSaveButtonIsDisabled(false)
   }
 
