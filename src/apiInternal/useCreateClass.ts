@@ -38,15 +38,16 @@ export const useCreateClass = ({ danceClass, packs }: Props) => {
 
     // Si tomó clases antes de los 15 días
     usersDates.forEach(({ startDate, id, packId, user_id: userId }) => {
-      if (classDate < startDate) {
+      if (classDate <= startDate) {
+        console.log('es menor o igual')
         const { duration, period } = packs.filter(pack => pack.id === packId)[0]
         const endDate = new Date(classDate)
 
         if (period === 'month') {
-          endDate.setMonth(endDate.getMonth() + duration)
+          endDate.setMonth(classDate.getMonth() + duration)
           endDate.setDate(endDate.getDate() - 1)
         } else if (period === 'week') {
-          endDate.setDate(endDate.getDate() + 7 * duration)
+          endDate.setDate(classDate.getDate() + 7 * duration)
         }
 
         datesToUpdate.push({
@@ -57,6 +58,7 @@ export const useCreateClass = ({ danceClass, packs }: Props) => {
         })
       }
     })
+
     // Actualizar las clases de los usuarios en el estado
     const [data] = await createClass(danceClass, datesToUpdate)
 
