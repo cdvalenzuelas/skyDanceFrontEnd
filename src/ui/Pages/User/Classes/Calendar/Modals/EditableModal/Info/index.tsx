@@ -1,11 +1,16 @@
 // Libs
-import { Avatar, AvatarGroup, Chip, User, Link, Image, Card, CardHeader, CardFooter, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react'
-import { type FC } from 'react'
+import { type Dispatch, type FC, type SetStateAction } from 'react'
 
 // Componets
-import { useUserState, type DanceClass } from '@state'
-import styles from '../../styles.module.css'
-import { userColor } from '@/utils/users'
+import { type User, useUserState, type DanceClass } from '@state'
+import { NotToUpdate } from './NotToUpdate'
+import { ToUpdate } from './ToUpdate'
+
+interface VirtualUser extends DanceClass {
+  order: number
+  image: string
+  name: string
+}
 
 interface Props {
   danceClass: DanceClass
@@ -13,9 +18,14 @@ interface Props {
   month: number
   year: number
   editable: boolean
+  toUpdate?: boolean
+  setToUpdate?: Dispatch<SetStateAction<boolean>>
+  oldUsers?: User[]
+  oldUsersIds?: string[]
+  getSelectedUsers?: (users: User[]) => void
 }
 
-export const Info: FC<Props> = ({ danceClass, dayOfMonth, month, year, editable }) => {
+export const Info: FC<Props> = ({ danceClass, dayOfMonth, month, year, editable, toUpdate, setToUpdate, oldUsers, oldUsersIds, getSelectedUsers }) => {
   const userId = useUserState(state => state.id)
   const virtualUser = danceClass.users.map(item => {
     if (item.id === userId) {
@@ -41,73 +51,23 @@ export const Info: FC<Props> = ({ danceClass, dayOfMonth, month, year, editable 
 
   virtualUser.sort((a, b) => a.order - b.order)
 
-  return (<Card className={styles.info}>
-    <CardHeader className="absolute z-10 top-1 flex flex-col items-start px-5 gap-2">
-      <User
-        name={danceClass.teacher.name}
-        className='py-2'
-        style={{ color: '#fff' }}
-        description={(
-          <Link href="https://www.instagram.com/bachataduane/" size="sm" isExternal>
-            @bachataduane
-          </Link>
-        )}
-        avatarProps={{
-          src: danceClass.teacher.image,
-          size: 'md',
-          isBordered: true,
-          color: 'secondary'
-        }}
-      />
+  const virtualUser2 = JSON.parse(JSON.stringify(virtualUser)) as VirtualUser[]
 
-      <div className='flex-grow flex flex-col gap-2'>
-        <Chip size='sm' color='secondary'>{`${dayOfMonth}/${month + 1}/${year} ${danceClass.hour}:00 a ${danceClass.hour + 1}:00`}</Chip>
-        <div className='flex justify-start gap-2'>
-          <Chip size='sm' color='danger'>{danceClass.gender}</Chip>
-          <Chip size='sm' color='warning'>{danceClass.difficulty}</Chip>
-          <Chip size='sm' color='success'>{danceClass.mode}</Chip>
-          {danceClass.style !== '' && <Chip size='sm' color='primary'>{danceClass.style}</Chip>}
-        </div>
-      </div>
-
-    </CardHeader>
-
-    <CardFooter className="absolute bg-white/30 bottom-0 border-t-1 border-zinc-100/50 z-10 justify-between px-5">
-      <div className='py-2 flex flex-col gap-2'>
-
-        <Chip
-          size='sm'
-          color='secondary'>
-          {danceClass.users.length} estudiantes
-        </Chip>
-
-        <AvatarGroup
-          color='primary'
-          isGrid
-          size='sm'
-          max={40}
-          className='flex justify-start flex-wrap w-full'>
-          {virtualUser.map(item => <Popover key={item.id} color='success' backdrop='blur'>
-            <PopoverTrigger>
-              <Avatar
-                key={item.id}
-                src={item.image}
-                color={userColor(item)}
-                isBordered />
-            </PopoverTrigger>
-            <PopoverContent>
-              {item.name}
-            </PopoverContent>
-          </Popover>)}
-        </AvatarGroup>
-      </div>
-    </CardFooter>
-
-    <Image
-      removeWrapper
-      alt="Card background"
-      className="z-0 w-full h-full object-cover"
-      src={`teachers/${danceClass.teacher.instagram_id}.jpg`}
+  if (toUpdate === false && toUpdate !== undefined) {
+    return <NotToUpdate
+      danceClass={danceClass}
+      dayOfMonth={dayOfMonth}
+      month={month}
+      year={year}
+      editable={editable}
+      setToUpdate={setToUpdate}
+      virtualUser={virtualUser2}
     />
-  </Card>)
+  } else {
+    return <ToUpdate
+      danceClass={danceClass}
+      oldUsers={oldUsers}
+      getSelectedUsers={getSelectedUsers}
+    />
+  }
 }
