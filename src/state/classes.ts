@@ -1,6 +1,6 @@
 import { type StateCreator, create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import type { DanceClass } from '@state'
+import type { DanceClass, User } from '@state'
 
 // *****************************TYPES****************************//
 export interface AppClasses {
@@ -12,6 +12,7 @@ interface Actions {
   addClass: (yearMonth: string, newClass: DanceClass) => void
   hoursOfClassesByDay: Record<string, number[]>
   setHoursOfClassesByDay: (yearMonth: string) => void
+  updateClass: (date: Date, classId: string, users: User[]) => void
 }
 
 // ***************************STATE*****************************//
@@ -28,6 +29,28 @@ const UserStateApi: StateCreator<AppClasses & Actions> = (set, get) => ({
   addClass: (yearMonth, newClass) => {
     const classesStore = get().classesStore
     classesStore[yearMonth] = [...classesStore[yearMonth], newClass]
+
+    set({ classesStore })
+  },
+  updateClass: (date: Date, classId: string, users: User[]) => {
+    const dateYear = `${date.getFullYear()}-${date.getMonth()}`
+    const classesStore = get().classesStore
+
+    const filtered = classesStore[dateYear].filter(item => item.id === classId)[0]
+    const notFiltered = classesStore[dateYear].filter(item => item.id !== classId)
+
+    const newUsers = users.map(user => {
+      const internalUser = {
+        ...user,
+        active_plan: user.active_plan
+      }
+
+      return internalUser as unknown as User
+    })
+
+    filtered.users = newUsers
+
+    classesStore[dateYear] = [filtered, ...notFiltered]
 
     set({ classesStore })
   },

@@ -2,7 +2,7 @@ import { useState, type FC, type MouseEvent, useRef } from 'react'
 import { Button, Modal, ModalContent, ModalFooter } from '@nextui-org/react'
 import { Info } from '../EditableModal/Info'
 import styles from '../styles.module.css'
-import { type DanceClass, type User } from '@/state'
+import { useClassesState, useUsersState, type DanceClass, type User } from '@/state'
 import { updateClasses } from '@/api/classes/updateClass'
 
 interface Props {
@@ -14,8 +14,12 @@ interface Props {
 }
 
 export const ReadableModal: FC<Props> = ({ dayOfMonth, month, year, handleClick, danceClass }) => {
-  const oldUsers = JSON.parse(JSON.stringify(danceClass.users.map(user => user))) as User[]
-  const oldUsersIds = oldUsers.map(user => user.id)
+  const globalUsers = useUsersState(state => state.users)
+  const updateClass = useClassesState(state => state.updateClass)
+  const updateUsersPacks = useUsersState(state => state.updateUsersPacks)
+
+  const oldUsersIds = danceClass.users.map(user => user.id)
+  const oldUsers = globalUsers.filter(user => oldUsersIds.includes(user.id))
 
   const [toUpdate, setToUpdate] = useState<boolean>(false)
   const [users, setUsers] = useState<User[]>([])
@@ -38,8 +42,10 @@ export const ReadableModal: FC<Props> = ({ dayOfMonth, month, year, handleClick,
 
   const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
     setSaveIsDesables(true)
-    await updateClasses({ usersToAdd, usersToDelete, users, classId: danceClass.id })
-    setSaveIsDesables(false)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const response = await updateClasses({ usersToAdd, usersToDelete, users, classId: danceClass.id })
+    updateClass(danceClass.date, danceClass.id, users)
+    updateUsersPacks(response)
     buttonRef.current?.click()
   }
 

@@ -31,6 +31,7 @@ interface Actions {
   updateUsersDates: (usersDates: DateToUpdate[]) => void
   udateUsersTakenClasses: (usersIds: string[]) => void
   updateUserPack: (usersIds: string, sale: Sale, sell: number, resetReward: boolean) => void
+  updateUsersPacks: (sales: Sale[]) => void
 }
 
 // ************************************STATE******************************* //
@@ -91,6 +92,22 @@ const UserStateApi: StateCreator<MinimalUsers & Actions> = (set, get) => ({
     filteredUser.reward = resetReward ? 0 : filteredUser.reward + sell
 
     set({ users: [filteredUser, ...noFilteredUsers] })
+  },
+  updateUsersPacks: (sales: Sale[]) => {
+    const users = get().users
+
+    const usersIdsFromPacks = sales.map(sale => sale.user_id)
+
+    const filtered = JSON.parse(JSON.stringify(users.filter(user => usersIdsFromPacks.includes(user.id)))) as User[]
+    const notFiltered = users.filter(user => !usersIdsFromPacks.includes(user.id))
+
+    filtered.forEach(user => {
+      const sale = sales.filter(item => item.user_id === user.id)[0]
+
+      user.active_plan = sale
+    })
+
+    set({ users: [...filtered, ...notFiltered] })
   }
 })
 
