@@ -3,7 +3,7 @@ import { useState, useEffect, type ChangeEvent, type MouseEvent, type Dispatch, 
 
 // Typos
 import type { DanceClass, DanceDifficulty, DanceGender, DanceMode, User } from '@state'
-import { useUsersState, usePacksState } from '@state'
+import { useUsersState, usePacksState, useClassesState } from '@state'
 import { useCreateClass, useDeleteClass } from '@apiInternal'
 
 interface Props {
@@ -24,6 +24,7 @@ export const useForm = ({ danceClass, setInternalDanceClass, setIsOpenEditableMo
   const { deleteClass } = useDeleteClass({ danceClass })
   const { createClass } = useCreateClass({ danceClass, packs })
   const [saveButtonIsDisabled, setSaveButtonIsDisabled] = useState<boolean>(false)
+  const addClass = useClassesState(state => state.addClass)
 
   useEffect(() => {
     setTeachers(getTeachers())
@@ -69,7 +70,8 @@ export const useForm = ({ danceClass, setInternalDanceClass, setIsOpenEditableMo
 
   // Eliminar la clase
   const handleConfirmDelete = async (e: MouseEvent<HTMLButtonElement>) => {
-    await deleteClass()
+    const { data, date } = await deleteClass()
+    addClass(`${date.getFullYear()}-${date.getMonth()}`, data)
     updateModals()
   }
 

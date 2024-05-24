@@ -1,5 +1,5 @@
 import { createClass } from '@/api/classes/createClass'
-import { type DanceClass, useClassesState } from '@state'
+import { type DanceClass } from '@state'
 
 interface Props {
   danceClass: DanceClass
@@ -7,7 +7,6 @@ interface Props {
 
 export const useDeleteClass = ({ danceClass }: Props) => {
   const deleteClass = async () => {
-    const addClass = useClassesState(state => state.addClass)
     let newClassToCreate = JSON.parse(JSON.stringify(danceClass)) as DanceClass
 
     newClassToCreate = {
@@ -22,7 +21,7 @@ export const useDeleteClass = ({ danceClass }: Props) => {
 
     const date = new Date(data.date)
 
-    addClass(`${date.getFullYear()}-${date.getMonth()}`, data)
+    return { data, date }
   }
 
   return { deleteClass }
